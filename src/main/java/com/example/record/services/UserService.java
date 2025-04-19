@@ -1,0 +1,248 @@
+package com.example.record.services;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.record.dto.AuthResponse;
+import com.example.record.dto.SignupRequest;
+import com.example.record.dto.UpdatePasswordRequest;
+import com.example.record.dto.UserListResponse;
+import com.example.record.exception.ErrorMessages;
+import com.example.record.models.dao.PasswordTokenRepository;
+import com.example.record.models.dao.UserAccountRepository;
+import com.example.record.models.entities.PasswordResetToken;
+import com.example.record.models.entities.UserAccount;
+
+
+
+@Service
+public class UserService {
+    
+    @Autowired
+    UserAccountRepository userAccountRepository;
+
+    @Autowired
+    PasswordTokenRepository passwordTokenRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    public static final int PERMISSION_LEVEL_ADMIN = 1;
+
+    public static final int PERMISSION_LEVEL_USER = 2;
+
+
+    /**
+     * delete_atを更新してアカウントを無効化
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUser(int userId) throws Exception {
+
+        try {
+            userAccountRepository.updateDeleteAtByUserId(userId);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
+    /**
+     * delete_atを更新してアカウントを無効化
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePermissionLevelToAdmin(int userId) throws Exception {
+
+        try {
+            userAccountRepository.updatePermissionLevelByUserId(userId, PERMISSION_LEVEL_ADMIN);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
+    /**
+     * delete_atを更新してアカウントを無効化
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePermissionLevelToUser(int userId) throws Exception {
+
+        try {
+            userAccountRepository.updatePermissionLevelByUserId(userId, PERMISSION_LEVEL_USER);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
+
+    /**
+     * ユーザー一覧取得
+     */
+    public List<UserListResponse> getUserList(){
+
+        List<UserAccount> userListByDB = userAccountRepository.findByDeleteAtIsNull();
+        List<UserListResponse> userListRes = new ArrayList<>();
+
+        for (UserAccount userAccount : userListByDB) {
+            UserListResponse user = new UserListResponse();
+
+            user.setUserId(userAccount.getUserId());
+            user.setUsername(userAccount.getUsername());
+            user.setEmail(userAccount.getEmail());
+            user.setPermissionLevel(userAccount.getPermissionLevel());
+
+            userListRes.add(user);
+            
+        }
+
+        return userListRes;
+    }
+
+    /**
+     * アカウント情報取得
+     */
+    public AuthResponse getUserInfoByEmail(String email){
+
+        UserAccount user = userAccountRepository.findUserAccountByEmail(email);
+
+        AuthResponse userRes = new AuthResponse();
+
+
+        userRes.setEmail(user.getEmail());
+        userRes.setUsername(user.getUsername());
+        userRes.setPermissionLevel(user.getPermissionLevel());
+        
+        return userRes;
+    }
+
+
+    /**
+     * メールアドレス重複確認
+     */
+    public void isEmailRegist(SignupRequest signupRequest) throws RuntimeException{
+        
+        Optional<UserAccount> isUserRegist = userAccountRepository.findByEmailAndDeleteAtIsNull(signupRequest.getEmail());
+        isUserRegist.ifPresent(user -> {
+            throw new RuntimeException(ErrorMessages.UserErros.AUTH_ERROR);
+        });
+    }
+
+    /**
+     * 新規登録
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void newUserRegister(SignupRequest signupRequest) throws Exception{
+
+
+        UserAccount newUser = new UserAccount();
+        newUser.setUsername(signupRequest.getUsername());
+        newUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+        newUser.setEmail(signupRequest.getEmail());
+        newUser.setPermissionLevel(PERMISSION_LEVEL_USER); // 新規登録は一般ユーザーとして登録する
+
+
+        try {
+            userAccountRepository.save(newUser);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
+    /**
+     * メールアドレス変更
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateNewEmail(String email, String newEmail) throws Exception{
+
+        if (userAccountRepository.updateEmailByEmail(email, newEmail) < 1)
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+    }
+
+    /**
+     * 名前変更
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateNewUsername(String email, String newUsername) throws Exception{
+
+        if (userAccountRepository.updateUsernameByEmail(email, newUsername) < 1)
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+    }
+
+    /**
+     * パスワードリセットURL生成
+     */
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = UsernameNotFoundException.class)
+    public String genPasswordResetToken(String conTextPath, String email) throws UsernameNotFoundException, Exception{
+
+        UserAccount user = userAccountRepository.findByEmailAndDeleteAtIsNull(email)
+                            .orElseThrow(() -> {
+                                throw new UsernameNotFoundException(ErrorMessages.UserErros.AUTH_ERROR);
+                            });
+        
+        // パスワードリセットトークン作成
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken myToken = new PasswordResetToken(token,user);
+        try {
+            passwordTokenRepository.save(myToken);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR); 
+        }
+        passwordTokenRepository.save(myToken);
+
+        String url = conTextPath + "/user/password?token=" + token;
+
+        return url;
+    }
+
+    /**
+     * パスワードリセット時 : 新しいパスワードに変更
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public String updateNewPassword(UpdatePasswordRequest updatePasswordRequest) throws Exception{
+        UserAccount user = passwordTokenRepository.findByToken(updatePasswordRequest.getToken()).getUser();
+
+        if (userAccountRepository.updatePasswordByEmail(user.getEmail(), passwordEncoder.encode(updatePasswordRequest.getNewPassword())) < 1)
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);  
+        return user.getEmail();
+    }
+
+    /**
+     * パスワードリセットトークンの検証
+     */
+    public String validatePasswordResetToken(String token){
+
+        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+
+        return !isTokenFound(passToken) ? "不正なトークンです"
+                : isTokenExpired(passToken) ? "有効期限切れのトークンです"
+                : null;
+    }
+
+    /**
+     * トークンの存在確認
+     * 
+     * @param passToken パスワードリセットトークン
+     * @return 存在するかどうか
+     */
+    private boolean isTokenFound(PasswordResetToken passToken) {
+        return passToken != null;
+    }
+
+    /**
+     * トークンの有効期限確認
+     * 
+     * @param passToken パスワードリセットトークン
+     * @return 有効期限切れかどうか
+     */
+    private boolean isTokenExpired(PasswordResetToken passToken) {
+        final Calendar cal = Calendar.getInstance();
+        return passToken.getExpiryDate().before(cal.getTime());
+    }
+    
+}

@@ -1,0 +1,56 @@
+services:
+
+  # mysql コンテナの追加
+  mysql:
+    image: mysql:8.4
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/sql:/docker-entrypoint-initdb.d
+    environment:
+      - TZ=Asia/Tokyo
+      - MYSQL_USER=usr
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=record
+      - MYSQL_ALLOW_EMPTY_PASSWORD='yes'
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    container_name: record-mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+
+  # phpmyadmin コンテナの追加
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - TZ=Asia/Tokyo
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+
+    links:
+      - mysql
+    ports:
+      - 4040:80
+    volumes:
+      - ./phpmyadmin/sessions:/sessions
+    container_name: record-phpmyadmin
+
+  # mailhog コンテナの追加
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025" # SMTP サーバー
+      - "8025:8025" # Web UI
+    volumes:
+      - mailhog-data:/tmp
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp
+    container_name: record-mailhog
+
+volumes:
+  mailhog-data:

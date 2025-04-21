@@ -2,7 +2,9 @@ package com.example.record.services;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,6 +41,29 @@ public class UserService {
     public static final int PERMISSION_LEVEL_ADMIN = 1;
 
     public static final int PERMISSION_LEVEL_USER = 2;
+
+
+    /**
+     * プルダウンメニュー、ユーザー選択用
+     * @return
+     */
+    public List<Map<String, Object>> getMenuItemUserList(){
+
+        List<UserAccount> users = userAccountRepository.findByDeleteAtIsNull();
+
+        List<Map<String, Object>> userSelectList = new ArrayList<>();
+
+        for (UserAccount userAccount : users) {
+            Map<String, Object> user = new HashMap<>();
+
+            user.put("userId", userAccount.getUserId());
+            user.put("username", userAccount.getUsername());
+
+            userSelectList.add(user);
+        }
+
+        return userSelectList;
+    }
 
 
     /**
@@ -114,6 +139,7 @@ public class UserService {
         AuthResponse userRes = new AuthResponse();
 
 
+        userRes.setUserId(user.getUserId());
         userRes.setEmail(user.getEmail());
         userRes.setUsername(user.getUsername());
         userRes.setPermissionLevel(user.getPermissionLevel());

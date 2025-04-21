@@ -18,6 +18,7 @@ import com.example.record.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -46,7 +48,17 @@ public class UserController {
     MailSenderService mailSenderService;
 
 
-        /**
+    @GetMapping("/private/user/menuitem")
+    public ResponseEntity<List<Map<String, Object>>> getMenuItemUserList() {
+
+        List<Map<String, Object>> userList = userService.getMenuItemUserList();
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+    
+
+
+    /**
      * ユーザー一覧取得
      * 
      * @return レスポンスエンティティ

@@ -7,6 +7,8 @@ import lombok.Setter;
 @Getter
 public class AuthResponse {
 
+    private int userId;
+    
     private String username;
 
     private String email;

@@ -1,5 +1,8 @@
 package com.example.record.services;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +31,38 @@ public class ProgressService {
 
 
     /**
-     * 
-     * 取得（親）未と年
-     * 
-     * 取得（子）未と年
-     * 
-     * 
-     * 追加（一緒でいけるはず）
-     * 
      * 更新
-     * 
-     * 削除
-     * 
+     * @param request
+     * @return
+     * @throws Exception
      */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateProgress(ProgressRequest request) throws Exception{
+
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        ProgressManagement progress = new ProgressManagement();
+        progress.setManagementId(request.getManagementId());
+        progress.setParentId(request.getParentId());
+        progress.setUserId(request.getUserId());
+        progress.setTitle(request.getTitle());
+        progress.setContents(request.getContents());
+        progress.setLink(request.getLink());
+        progress.setStatus(request.getStatus());
+        progress.setCompletionScheduleAt(request.getCompletionScheduleAt());
+        progress.setUpdateAt(nowDateTime);
+
+
+        if (request.getStatus() == STATUS_5_COMPLATED){
+            progress.setDeleteAt(nowDateTime);
+        }
+
+        try {
+            progressRepo.save(progress);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
 
 
     /**
@@ -52,6 +74,8 @@ public class ProgressService {
     @Transactional(rollbackFor = Exception.class)
     public void newProgressRegister(ProgressRequest request) throws Exception{
 
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
         ProgressManagement progress = new ProgressManagement();
         progress.setParentId(request.getParentId());
         progress.setUserId(request.getUserId());
@@ -60,6 +84,10 @@ public class ProgressService {
         progress.setLink(request.getLink());
         progress.setStatus(request.getStatus());
         progress.setCompletionScheduleAt(request.getCompletionScheduleAt());
+
+        if (request.getStatus() == STATUS_5_COMPLATED){
+            progress.setDeleteAt(nowDateTime);
+        }
 
 
         try {
@@ -81,17 +109,6 @@ public class ProgressService {
     }
 
     /**
-     * 未完了の子属性レコードリスト取得
-     * @return
-     */
-    public List<ProgressManagement> getIncomplateProgressChild(){
-
-        List<ProgressManagement> progressList = progressRepo.findByParentIdIsNotNullAndDeleteAtIsNull();
-
-        return progressList;
-    }
-
-    /**
      * 完了済みの親属性レコードリスト取得
      * @return
      */
@@ -103,12 +120,12 @@ public class ProgressService {
     }
 
     /**
-     * 完了済みの子属性レコードリスト取得
+     * 子属性レコードリスト取得
      * @return
      */
-    public List<ProgressManagement> getComplateProgressChild(){
+    public List<ProgressManagement> getProgressChild(){
 
-        List<ProgressManagement> progressList = progressRepo.findByParentIdIsNotNullAndDeleteAtIsNotNull();
+        List<ProgressManagement> progressList = progressRepo.findByParentIdIsNotNull();
 
         return progressList;
     }

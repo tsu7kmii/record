@@ -49,7 +49,7 @@ public class ProgressManagement {
     @Column(name = "status")
     private int status;
 
-    @Column(name = "create_at",insertable = false)
+    @Column(name = "create_at",insertable = false, updatable = false)
     private Date createAt;
 
     @Column(name = "update_at")

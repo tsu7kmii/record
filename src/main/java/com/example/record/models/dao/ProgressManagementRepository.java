@@ -17,13 +17,6 @@ public interface ProgressManagementRepository extends JpaRepository<ProgressMana
 
 
     /**
-     * 未完了の子属性レコード取得
-     * @return
-     */
-    List<ProgressManagement> findByParentIdIsNotNullAndDeleteAtIsNull();
-
-
-    /**
      * 完了済みの親属性レコード取得
      * @return
      */
@@ -34,6 +27,6 @@ public interface ProgressManagementRepository extends JpaRepository<ProgressMana
      * 完了済みの子属性レコード取得
      * @return
      */
-    List<ProgressManagement> findByParentIdIsNotNullAndDeleteAtIsNotNull();
+    List<ProgressManagement> findByParentIdIsNotNull();
     
 }

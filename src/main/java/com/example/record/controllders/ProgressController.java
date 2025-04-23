@@ -17,6 +17,8 @@ import com.example.record.services.ProgressService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -29,11 +31,24 @@ public class ProgressController {
     ProgressService progressService;
 
 
+    @PutMapping("/update")
+    public ResponseEntity<Void> updateProgress(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {
+        
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.ProgressError.VALIDATE_FAIL);
+        }
+
+        progressService.updateProgress(progressRequest);
+        
+        return ResponseEntity.ok().build();
+    }
+
+
     /**
      * 未完了の親属性レコードリスト取得
      * @return
      */
-    @GetMapping("/incomplete/parent")
+    @GetMapping("/parent/incomplete")
     public ResponseEntity<List<ProgressManagement>> getIncomplateParentList() {
 
         List<ProgressManagement> progressList = progressService.getIncomplateProgressParent();
@@ -42,23 +57,11 @@ public class ProgressController {
     }
 
     /**
-     * 未完了の子属性レコードリスト取得
-     * @return
-     */
-    @GetMapping("/incomplete/child")
-    public ResponseEntity<List<ProgressManagement>> getIncomplateChildList() {
-
-        List<ProgressManagement> progressList = progressService.getIncomplateProgressChild();
-
-        return new ResponseEntity<>(progressList, HttpStatus.OK);
-    }
-
-    /**
      * 未完了の親属性レコードリスト取得
      * @return
      */
-    @GetMapping("/complete/parent")
-    public ResponseEntity<List<ProgressManagement>> getCComplateParentList() {
+    @GetMapping("/parent/complete")
+    public ResponseEntity<List<ProgressManagement>> getComplateParentList() {
 
         List<ProgressManagement> progressList = progressService.getComplateProgressParent();
 
@@ -69,10 +72,10 @@ public class ProgressController {
      * 未完了の子属性レコードリスト取得
      * @return
      */
-    @GetMapping("/complete/child")
-    public ResponseEntity<List<ProgressManagement>> getCComplateChildList() {
+    @GetMapping("/child")
+    public ResponseEntity<List<ProgressManagement>> getChildList() {
 
-        List<ProgressManagement> progressList = progressService.getComplateProgressChild();
+        List<ProgressManagement> progressList = progressService.getProgressChild();
 
         return new ResponseEntity<>(progressList, HttpStatus.OK);
     }

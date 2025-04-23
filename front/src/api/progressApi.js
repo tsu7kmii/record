@@ -7,17 +7,17 @@ export const registerProgress = async (formData) => {
 };
 
 export const getIncomplateParentList = async () => {
-    return sendJsonData('/api/progress/incomplete/parent', '', 'get');
-};
-
-export const getIncomplateChildList = async () => {
-    return sendJsonData('/api/progress/incomplete/child', '', 'get');
+    return sendJsonData('/api/progress/parent/incomplete', '', 'get');
 };
 
 export const getComplateParentList = async () => {
-    return sendJsonData('/api/progress/complete/parent', '', 'get');
+    return sendJsonData('/api/progress/parent/complete', '', 'get');
 };
 
-export const getComplateChildList = async () => {
-    return sendJsonData('/api/progress/complete/child', '', 'get');
+export const getChildList = async () => {
+    return sendJsonData('/api/progress/child', '', 'get');
+};
+
+export const updateProgress = async (formData) => {
+    return sendJsonData('/api/progress/update', formData, 'put');
 };

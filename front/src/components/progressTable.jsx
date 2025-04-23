@@ -39,27 +39,30 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
             <TableCell component="th" scope="row">
                 {new Date(item.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
             </TableCell>
-            <TableCell align="right">
+            <TableCell align="center">
                 {userList.find(user => user.userId === item.userId)?.username || "不明なユーザー"}
             </TableCell>
             <TableCell align="left">{item.title}</TableCell>
             <TableCell align="left" sx={{ whiteSpace: 'pre' }}>{item.contents}</TableCell>
             <TableCell align="left" sx={{ whiteSpace: 'pre' }}>{item.link}</TableCell>
-            <TableCell align="right">
+            <TableCell align="center">
                 {statusBox.find(status => status.value === item.status)?.label || "不明なステータス"}
             </TableCell>
-            <TableCell align="right">
+            <TableCell align="center">
                 {new Date(item.updateAt ?? item.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
             </TableCell>
-            <TableCell align="right">
+            <TableCell align="center">
                 {new Date(item.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
             </TableCell>
-            <TableCell align="right">
+            <TableCell align="center">
 
-                    {parent.deleteAt === null &&
+                    {parent.deleteAt === null && item.deleteAt === null &&
                         <Button variant="outlined" type="submit" onClick={() => handleEditSubmit(item)}>
                             Edit
                         </Button>
+                    }
+                    {parent.deleteAt === null && item.deleteAt !== null &&
+                        '完了済'
                     }
                     {parent.deleteAt !== null && item.deleteAt !== null &&
                         new Date(item.deleteAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
@@ -81,20 +84,17 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                 <TableHead>
                 <TableRow>
                     <TableCell>作成日</TableCell>
-                    <TableCell align="right">担当者</TableCell>
-                    <TableCell align="right">TITLE</TableCell>
-                    <TableCell align="right">CONTENTS</TableCell>
-                    <TableCell align="right">LINK</TableCell>
-                    <TableCell align="right">STATUS</TableCell>
-                    <TableCell align="right">最終更新日</TableCell>
-                    <TableCell align="right">完了予定日</TableCell>
-
-                    {parent.deleteAt === null &&
-                        <TableCell align="right">操作</TableCell>
-                    }
-                    {parent.deleteAt !== null &&
-                        <TableCell align="right">完了日</TableCell>
-                    }
+                    <TableCell align="center">担当者</TableCell>
+                    <TableCell align="center">TITLE</TableCell>
+                    <TableCell align="center">CONTENTS</TableCell>
+                    <TableCell align="center">LINK</TableCell>
+                    <TableCell align="center">STATUS</TableCell>
+                    <TableCell align="center">最終更新日</TableCell>
+                    <TableCell align="center">完了予定日</TableCell>
+                    <TableCell align="center">
+                        {parent.deleteAt === null && '操作' }
+                        {parent.deleteAt !== null && '完了日' }
+                    </TableCell>
 
 
                 </TableRow>

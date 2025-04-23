@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Container, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Container, Typography, Box, Button } from '@mui/material';
 import { getIncomplateParentList, getComplateParentList, getChildList } from '../../api/progressApi';
 import { getuserIdUsernameList } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
@@ -75,6 +75,12 @@ const ProgressView = () => {
             setError(handleApiError(error));
         }
     };
+
+    const handleNewSubmit = async () => {
+        setError(null);
+        
+        navigate('/progress/register')
+    };
     
 
     useEffect(() => {
@@ -96,14 +102,17 @@ const ProgressView = () => {
     return (
         <Container sx={{ minHeight: '100vh', width: '100%' }}>
         <Box mt={5}>
-            <Link to="/progress/register">
-                新しく登録
-            </Link>
-            <br /><br />
-            
-            <Typography variant="h4" component="h2" gutterBottom>
-                進捗一覧
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                
+                <Typography variant="h4" component="h2" gutterBottom>
+                    進捗一覧
+                </Typography>
+
+                <Button variant="outlined" type="submit" size="large"  onClick={() => handleNewSubmit(parent.managementId)}>
+                    新しく登録
+                </Button>
+            </Box>
+            <br />
             {incomplateParent.length > 0 && (
             <>
                 {incomplateParent.map((parent, index) => (

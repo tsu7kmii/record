@@ -41,9 +41,13 @@ public class ProgressService {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
+        if (request.getParentId() != null && !progressRepo.existsByManagementIdAndParentIdIsNullAndDeleteAtIsNull(request.getParentId())){
+            throw new Exception(ErrorMessages.ProgressError.VALIDATE_FAIL);
+        }
+
         ProgressManagement progress = new ProgressManagement();
         progress.setManagementId(request.getManagementId());
-        progress.setParentId(request.getParentId());
+        progress.setParentId(request.getParentId() != null ? request.getParentId() : null);
         progress.setUserId(request.getUserId());
         progress.setTitle(request.getTitle());
         progress.setContents(request.getContents());
@@ -76,8 +80,12 @@ public class ProgressService {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
+        if (request.getParentId() != null && !progressRepo.existsByManagementIdAndParentIdIsNullAndDeleteAtIsNull(request.getParentId())){
+            throw new Exception(ErrorMessages.ProgressError.VALIDATE_FAIL);
+        }
+
         ProgressManagement progress = new ProgressManagement();
-        progress.setParentId(request.getParentId());
+        progress.setParentId(request.getParentId() != null ? request.getParentId() : null);
         progress.setUserId(request.getUserId());
         progress.setTitle(request.getTitle());
         progress.setContents(request.getContents());

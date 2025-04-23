@@ -9,6 +9,16 @@ import com.example.record.models.entities.ProgressManagement;
 public interface ProgressManagementRepository extends JpaRepository<ProgressManagement, Integer> {
 
 
+
+
+    /**
+     * parentIdに指定されたmanagemetIdが有効(自身が子属性でなく、削除されていない)か検証
+     * @param managementId
+     * @return
+     */
+    boolean existsByManagementIdAndParentIdIsNullAndDeleteAtIsNull(int managementId);
+
+
     /**
      * 未完了の親属性レコード取得
      * @return

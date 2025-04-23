@@ -1,7 +1,10 @@
 package com.example.record.services;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +33,10 @@ import com.example.record.models.entities.UserAccount;
 public class UserService {
     
     @Autowired
-    UserAccountRepository userAccountRepository;
+    UserAccountRepository userRepo;
 
     @Autowired
-    PasswordTokenRepository passwordTokenRepository;
+    PasswordTokenRepository passwordRepo;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -49,7 +52,7 @@ public class UserService {
      */
     public List<Map<String, Object>> getUserIdUsernameList(){
 
-        List<UserAccount> users = userAccountRepository.findAll();
+        List<UserAccount> users = userRepo.findAll();
 
         List<Map<String, Object>> userSelectList = new ArrayList<>();
 
@@ -72,7 +75,7 @@ public class UserService {
      */
     public List<Map<String, Object>> getMenuItemUserList(){
 
-        List<UserAccount> users = userAccountRepository.findByDeleteAtIsNull();
+        List<UserAccount> users = userRepo.findByDeleteAtIsNull();
 
         List<Map<String, Object>> userSelectList = new ArrayList<>();
 
@@ -95,34 +98,64 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteUser(int userId) throws Exception {
 
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        UserAccount user = userRepo.findByUserId(userId);
+
+        user.setEmail(user.getEmail() + String.valueOf(user.getUserId()));
+        user.setUpdateAt(nowDateTime);
+        user.setDeleteAt(nowDateTime);
+
         try {
-            userAccountRepository.updateDeleteAtByUserId(userId);
+            userRepo.save(user);
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
         }
     }
 
     /**
-     * delete_atを更新してアカウントを無効化
+     * 権限レベルをADMINに変更
      */
     @Transactional(rollbackFor = Exception.class)
     public void updatePermissionLevelToAdmin(int userId) throws Exception {
 
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        UserAccount user = userRepo.findByUserId(userId);
+
+        if (user.getDeleteAt() != null){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        user.setUpdateAt(nowDateTime);
+        user.setPermissionLevel(PERMISSION_LEVEL_ADMIN);
+
         try {
-            userAccountRepository.updatePermissionLevelByUserId(userId, PERMISSION_LEVEL_ADMIN);
+            userRepo.save(user);
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
         }
     }
 
     /**
-     * delete_atを更新してアカウントを無効化
+     * 権限レベルをUSERに変更
      */
     @Transactional(rollbackFor = Exception.class)
     public void updatePermissionLevelToUser(int userId) throws Exception {
 
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        UserAccount user = userRepo.findByUserId(userId);
+
+        if (user.getDeleteAt() != null){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        user.setUpdateAt(nowDateTime);
+        user.setPermissionLevel(PERMISSION_LEVEL_USER);
+
         try {
-            userAccountRepository.updatePermissionLevelByUserId(userId, PERMISSION_LEVEL_USER);
+            userRepo.save(user);
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
         }
@@ -134,7 +167,7 @@ public class UserService {
      */
     public List<UserListResponse> getUserList(){
 
-        List<UserAccount> userListByDB = userAccountRepository.findByDeleteAtIsNull();
+        List<UserAccount> userListByDB = userRepo.findByDeleteAtIsNull();
         List<UserListResponse> userListRes = new ArrayList<>();
 
         for (UserAccount userAccount : userListByDB) {
@@ -157,7 +190,7 @@ public class UserService {
      */
     public AuthResponse getUserInfoByEmail(String email){
 
-        UserAccount user = userAccountRepository.findUserAccountByEmail(email);
+        UserAccount user = userRepo.findUserAccountByEmail(email);
 
         AuthResponse userRes = new AuthResponse();
 
@@ -176,7 +209,7 @@ public class UserService {
      */
     public void isEmailRegist(SignupRequest signupRequest) throws RuntimeException{
         
-        Optional<UserAccount> isUserRegist = userAccountRepository.findByEmailAndDeleteAtIsNull(signupRequest.getEmail());
+        Optional<UserAccount> isUserRegist = userRepo.findByEmailAndDeleteAtIsNull(signupRequest.getEmail());
         isUserRegist.ifPresent(user -> {
             throw new RuntimeException(ErrorMessages.UserErros.AUTH_ERROR);
         });
@@ -197,7 +230,7 @@ public class UserService {
 
 
         try {
-            userAccountRepository.save(newUser);
+            userRepo.save(newUser);
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
         }
@@ -209,8 +242,22 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateNewEmail(String email, String newEmail) throws Exception{
 
-        if (userAccountRepository.updateEmailByEmail(email, newEmail) < 1)
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        UserAccount user = userRepo.findUserAccountByEmail(email);
+
+        if (user.getDeleteAt() != null){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        user.setUpdateAt(nowDateTime);
+        user.setEmail(newEmail);
+
+        try {
+            userRepo.save(user);
+        } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
     }
 
     /**
@@ -219,8 +266,22 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateNewUsername(String email, String newUsername) throws Exception{
 
-        if (userAccountRepository.updateUsernameByEmail(email, newUsername) < 1)
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        UserAccount user = userRepo.findUserAccountByEmail(email);
+
+        if (user.getDeleteAt() != null){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        user.setUpdateAt(nowDateTime);
+        user.setUsername(newUsername);
+
+        try {
+            userRepo.save(user);
+        } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
     }
 
     /**
@@ -229,7 +290,7 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class, noRollbackFor = UsernameNotFoundException.class)
     public String genPasswordResetToken(String conTextPath, String email) throws UsernameNotFoundException, Exception{
 
-        UserAccount user = userAccountRepository.findByEmailAndDeleteAtIsNull(email)
+        UserAccount user = userRepo.findByEmailAndDeleteAtIsNull(email)
                             .orElseThrow(() -> {
                                 throw new UsernameNotFoundException(ErrorMessages.UserErros.AUTH_ERROR);
                             });
@@ -238,11 +299,11 @@ public class UserService {
         String token = UUID.randomUUID().toString();
         PasswordResetToken myToken = new PasswordResetToken(token,user);
         try {
-            passwordTokenRepository.save(myToken);
+            passwordRepo.save(myToken);
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR); 
         }
-        passwordTokenRepository.save(myToken);
+        passwordRepo.save(myToken);
 
         String url = conTextPath + "/user/password?token=" + token;
 
@@ -254,10 +315,23 @@ public class UserService {
      */
     @Transactional(rollbackFor = Exception.class)
     public String updateNewPassword(UpdatePasswordRequest updatePasswordRequest) throws Exception{
-        UserAccount user = passwordTokenRepository.findByToken(updatePasswordRequest.getToken()).getUser();
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
-        if (userAccountRepository.updatePasswordByEmail(user.getEmail(), passwordEncoder.encode(updatePasswordRequest.getNewPassword())) < 1)
-            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);  
+        UserAccount user = passwordRepo.findByToken(updatePasswordRequest.getToken()).getUser();
+
+        if (user.getDeleteAt() != null){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        user.setUpdateAt(nowDateTime);
+
+        try {
+            userRepo.save(user);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+
         return user.getEmail();
     }
 
@@ -266,7 +340,7 @@ public class UserService {
      */
     public String validatePasswordResetToken(String token){
 
-        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+        final PasswordResetToken passToken = passwordRepo.findByToken(token);
 
         return !isTokenFound(passToken) ? "不正なトークンです"
                 : isTokenExpired(passToken) ? "有効期限切れのトークンです"

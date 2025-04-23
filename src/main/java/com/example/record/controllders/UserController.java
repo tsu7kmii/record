@@ -47,8 +47,15 @@ public class UserController {
     @Autowired
     MailSenderService mailSenderService;
 
+    @GetMapping("/private/users/all")
+    public ResponseEntity<List<Map<String, Object>>> getUserIdUsernameList() {
 
-    @GetMapping("/private/user/menuitem")
+        List<Map<String, Object>> userList = userService.getUserIdUsernameList();
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping("/private/users/active")
     public ResponseEntity<List<Map<String, Object>>> getMenuItemUserList() {
 
         List<Map<String, Object>> userList = userService.getMenuItemUserList();

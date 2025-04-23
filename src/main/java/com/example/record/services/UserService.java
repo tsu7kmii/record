@@ -44,6 +44,29 @@ public class UserService {
 
 
     /**
+     * idマッチ、ユーザーネーム表示用
+     * @return
+     */
+    public List<Map<String, Object>> getUserIdUsernameList(){
+
+        List<UserAccount> users = userAccountRepository.findAll();
+
+        List<Map<String, Object>> userSelectList = new ArrayList<>();
+
+        for (UserAccount userAccount : users) {
+            Map<String, Object> user = new HashMap<>();
+
+            user.put("userId", userAccount.getUserId());
+            user.put("username", userAccount.getUsername());
+
+            userSelectList.add(user);
+        }
+
+        return userSelectList;
+    }
+
+
+    /**
      * プルダウンメニュー、ユーザー選択用
      * @return
      */

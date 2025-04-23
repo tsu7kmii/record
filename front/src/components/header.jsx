@@ -64,7 +64,7 @@ const Header = () => {
         if (error !== null){
             console.log(error);
         }
-      }, [error]);
+    }, [error]);
 
 
     return (
@@ -84,7 +84,7 @@ const Header = () => {
                         <Link to="/">Menu</Link>
                     </li>
                     <li>
-                        <Link to="/">Locations</Link>
+                        <Link to="/progress/view">progress</Link>
                     </li>
                     <li>
                         {userData ? (

@@ -22,9 +22,9 @@ public final class ErrorMessages {
     /**
      * 進捗管理関係のエラーメッセージ
      */
-    public static final class ManagementError {
+    public static final class ProgressError {
 
-        public static final String NOT_FOUND_ITEM = "指定されたマネジメント項目は存在しないか、既に完了済の可能性があります";
+        public static final String VALIDATE_FAIL = "バリデーションエラー";
   
     }
 

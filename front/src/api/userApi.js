@@ -47,3 +47,11 @@ export const updateRoleToUser = async (formData) => {
 export const updateRoleToAdmin = async (formData) => {
     return sendJsonData('/api/user/admin/role/admin', formData, 'put');
 };
+
+export const getMenuItemUserList = async () => {
+    return sendJsonData('/api/user/private/users/active', [], 'get');
+};
+
+export const getuserIdUsernameList = async () => {
+    return sendJsonData('/api/user/private/users/all', [], 'get');
+};

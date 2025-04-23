@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Link, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 
 
 
@@ -8,7 +8,6 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
     const [indexKey] = useState(index);
     const [parent] = useState(parentValue);
     const [children] = useState(childValue);
-    const [users] = useState(userList);
 
 
     
@@ -52,7 +51,7 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                             {new Date(parent.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
                         </TableCell>
                         <TableCell align="right">
-                            {users.find(user => user.userId === parent.userId)?.username || "不明なユーザー"}
+                            {userList.find(user => user.userId === parent.userId)?.username || "不明なユーザー"}
 
                         </TableCell>
                         <TableCell align="right">{parent.title}</TableCell>
@@ -62,7 +61,12 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                             {statusBox.find(status => status.value === parent.status)?.label || "不明なステータス"}
                         </TableCell>
                         <TableCell align="right">
-                            {new Date(parent.updateAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
+                            {parent.updateAt === null &&
+                                new Date(parent.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+                            }
+                            {parent.updateAt !== null &&
+                                new Date(parent.updateAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+                            }
                         </TableCell>
                         <TableCell align="right">
                             {new Date(parent.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
@@ -87,7 +91,7 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                                     {new Date(child.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
                                 </TableCell>
                                 <TableCell align="right">
-                                    {users.find(user => user.userId === child.userId)?.username || "不明なユーザー"}
+                                    {userList.find(user => user.userId === child.userId)?.username || "不明なユーザー"}
                                 </TableCell>
                                 <TableCell align="right">{child.title}</TableCell>
                                 <TableCell align="right" sx={{ whiteSpace: 'pre' }}>{child.contents}</TableCell>
@@ -96,7 +100,12 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                                     {statusBox.find(status => status.value === child.status)?.label || "不明なステータス"}
                                 </TableCell>
                                 <TableCell align="right">
-                                    {new Date(child.updateAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
+                                    {child.updateAt === null &&
+                                        new Date(child.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+                                    }
+                                    {child.updateAt !== null &&
+                                        new Date(child.updateAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+                                    }
                                 </TableCell>
                                 <TableCell align="right">
                                     {new Date(child.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}

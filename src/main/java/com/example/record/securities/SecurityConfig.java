@@ -63,7 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         // 認証が必要なパスを先に設定
                         .requestMatchers("/admin/**", "/api/user/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/private/**", "/api/user/admin/**").authenticated()
+                        .requestMatchers("/api/user/private/**", "/api/user/admin/**", "/api/progress/**").authenticated()
                         .requestMatchers("/", "/signin", "/success" ,"/user/**", "/api/**", "/index.html", "/static/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception

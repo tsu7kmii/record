@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.record.dto.ProgressRequest;
+import com.example.record.dto.progress.ProgressRequest;
 import com.example.record.exception.ErrorMessages;
 import com.example.record.models.entities.ProgressManagement;
 import com.example.record.services.ProgressService;

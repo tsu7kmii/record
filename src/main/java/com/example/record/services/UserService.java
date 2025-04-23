@@ -17,10 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.record.dto.AuthResponse;
-import com.example.record.dto.SignupRequest;
-import com.example.record.dto.UpdatePasswordRequest;
-import com.example.record.dto.UserListResponse;
+import com.example.record.dto.user.AuthResponse;
+import com.example.record.dto.user.SignupRequest;
+import com.example.record.dto.user.UpdatePasswordRequest;
+import com.example.record.dto.user.UserListResponse;
 import com.example.record.exception.ErrorMessages;
 import com.example.record.models.dao.PasswordTokenRepository;
 import com.example.record.models.dao.UserAccountRepository;

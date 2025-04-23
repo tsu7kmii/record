@@ -11,6 +11,9 @@ import UserList from './pages/auth/userList';
 import Success from './pages/util/success';
 import NotFound from './pages/util/notFound';
 import AccessDenied from './pages/util/accessDenied';
+import ProgressRegister from './pages/service/progressRegister';
+import ProgressView from './pages/service/progressView';
+import ProgressEdit from './pages/service/progressEdit';
 import { UserContext } from './components/userProvider';
 import Header from './components/header';
 
@@ -32,6 +35,10 @@ function App() {
         <Route path="/auth/username" element={<ProtectedLoginRoute><UpdateUsername /></ProtectedLoginRoute>} />
         <Route path="/auth/email" element={<ProtectedLoginRoute><UpdateEmail /></ProtectedLoginRoute>} />
         <Route path="/admin/users" element={<ProtectedRoleRoute><UserList /></ProtectedRoleRoute>} />
+
+        <Route path='/progress/view' element={<ProtectedRoleRoute><ProgressView /></ProtectedRoleRoute>}/>
+        <Route path='/progress/register' element={<ProtectedRoleRoute><ProgressRegister /></ProtectedRoleRoute>}/>
+        <Route path='/progress/edit' element={<ProtectedRoleRoute><ProgressEdit /></ProtectedRoleRoute>}/>
 
         <Route path="*" element={<NotFound />} />
 

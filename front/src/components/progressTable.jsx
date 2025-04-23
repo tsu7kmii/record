@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 
 
 
 const ProgressTable = ({index, parentValue, childValue, userList}) => {
 
+    const navigate = useNavigate();
     const [indexKey] = useState(index);
-    const [parent] = useState(parentValue);
-    const [children] = useState(childValue);
+    const parent = parentValue;
+    const children = childValue;
 
-
-    
     const statusBox = [
         { label : "未着手", value : 0 },
         { label : "取り組み中", value : 1 },
@@ -20,14 +20,54 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
         { label : "完了", value : 5 },
     ];
 
+    const handleEditSubmit = async (element) => {
     
+        navigate('/progress/edit',{state: {progress: element}});
+    };
+
+    const handleNewSubmit = async (parentId) => {
+    
+        navigate('/progress/register',{state: {parentId: parentId}});
+    };
+
+
+    const renderRow = (item, isChild = false) => (
+        <TableRow
+            key={item.managementId}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 }, border: isChild ? undefined : '2px solid skyblue' }}
+        >
+            <TableCell component="th" scope="row">
+                {new Date(item.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
+            </TableCell>
+            <TableCell align="right">
+                {userList.find(user => user.userId === item.userId)?.username || "不明なユーザー"}
+            </TableCell>
+            <TableCell align="left">{item.title}</TableCell>
+            <TableCell align="left" sx={{ whiteSpace: 'pre' }}>{item.contents}</TableCell>
+            <TableCell align="left" sx={{ whiteSpace: 'pre' }}>{item.link}</TableCell>
+            <TableCell align="right">
+                {statusBox.find(status => status.value === item.status)?.label || "不明なステータス"}
+            </TableCell>
+            <TableCell align="right">
+                {new Date(item.updateAt ?? item.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
+            </TableCell>
+            <TableCell align="right">
+                {new Date(item.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
+            </TableCell>
+            <TableCell align="right">
+                <Button variant="outlined" type="submit" onClick={() => handleEditSubmit(item)}>
+                    Edit
+                </Button>
+            </TableCell>
+        </TableRow>
+    );
 
     return (
         <>
         <Typography variant="h5" component="h3" gutterBottom>
-                グループ{indexKey +1}
-            </Typography>
-        <TableContainer component={Paper}>
+            グループ{parent.managementId}
+        </Typography>
+        <TableContainer component={Paper} >
             <Table key={indexKey} sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
@@ -43,88 +83,23 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                    <TableRow
-                        key={parent.managementId}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                        <TableCell component="th" scope="row">
-                            {new Date(parent.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
-                        </TableCell>
-                        <TableCell align="right">
-                            {userList.find(user => user.userId === parent.userId)?.username || "不明なユーザー"}
-
-                        </TableCell>
-                        <TableCell align="right">{parent.title}</TableCell>
-                        <TableCell align="right" sx={{ whiteSpace: 'pre' }}>{parent.contents}</TableCell>
-                        <TableCell align="right" sx={{ whiteSpace: 'pre' }}>{parent.link}</TableCell>
-                        <TableCell align="right">
-                            {statusBox.find(status => status.value === parent.status)?.label || "不明なステータス"}
-                        </TableCell>
-                        <TableCell align="right">
-                            {parent.updateAt === null &&
-                                new Date(parent.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
-                            }
-                            {parent.updateAt !== null &&
-                                new Date(parent.updateAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
-                            }
-                        </TableCell>
-                        <TableCell align="right">
-                            {new Date(parent.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
-                        </TableCell>
-                        <TableCell align="right">
-                            <Button variant="outlined" sx={{ color: 'red', borderColor: 'red' }}
-                                    type="submit" 
-                                    onClick={() => handleDeleteUser(parent.userId)}
-                            
-                            >
-                                操作
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                    {children.length > 0 &&  children.map((child) => (
-                        child.parentId == parent.managementId && (
-                            <TableRow
-                                key={child.userId}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {new Date(child.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {userList.find(user => user.userId === child.userId)?.username || "不明なユーザー"}
-                                </TableCell>
-                                <TableCell align="right">{child.title}</TableCell>
-                                <TableCell align="right" sx={{ whiteSpace: 'pre' }}>{child.contents}</TableCell>
-                                <TableCell align="right" sx={{ whiteSpace: 'pre' }}>{child.link}</TableCell>
-                                <TableCell align="right">
-                                    {statusBox.find(status => status.value === child.status)?.label || "不明なステータス"}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {child.updateAt === null &&
-                                        new Date(child.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
-                                    }
-                                    {child.updateAt !== null &&
-                                        new Date(child.updateAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
-                                    }
-                                </TableCell>
-                                <TableCell align="right">
-                                    {new Date(child.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Button variant="outlined" sx={{ color: 'red', borderColor: 'red' }}
-                                            type="submit" 
-                                            onClick={() => handleDeleteUser(child.userId)}
-                                    
-                                    >
-                                        操作
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    ))}
+                {renderRow(parent)}
+                {children
+                    .filter(child => String(child.parentId) === String(parent.managementId))
+                    .map(child => renderRow(child, true))
+                }
                 </TableBody>
             </Table>
         </TableContainer>
+        
+        <br />
+
+        <Button variant="outlined" type="submit" onClick={() => handleNewSubmit(parent.managementId)}>
+            グループに進捗を追加
+        </Button>
+
+        <br />
+        <br />
         </>
   );
 };

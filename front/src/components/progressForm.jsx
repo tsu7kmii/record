@@ -9,7 +9,7 @@ import { handleApiError } from '../api/errorHandler';
 import { UserContext } from "./userProvider";
 
 
-const ProgressForm = ({initialValues, onSubmit}) => {
+const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
 
     // const initlValues = {
     //     managementId: '', // 編集等の場合、managementIdをjsonで事前に含めておく
@@ -33,14 +33,14 @@ const ProgressForm = ({initialValues, onSubmit}) => {
     const oneWeekLater = new Date();
     oneWeekLater.setDate(oneWeekLater.getDate() + 7);
 
-    const statusBox = [
-        { label : "未着手", value : 0 },
-        { label : "取り組み中", value : 1 },
-        { label : "待機", value : 2 },
-        { label : "レビュー待ち", value : 3 },
-        { label : "処理待ち", value : 4 },
-        // { label : "完了", value : 5 },
-    ];
+    // const statusBox = [
+    //     { label : "未着手", value : 0 },
+    //     { label : "取り組み中", value : 1 },
+    //     { label : "待機", value : 2 },
+    //     { label : "レビュー待ち", value : 3 },
+    //     { label : "処理待ち", value : 4 },
+    //     { label : "完了", value : 5 },
+    // ];
 
     const handleChange = (field) => (event) => {
         setFormValues({
@@ -101,6 +101,16 @@ const ProgressForm = ({initialValues, onSubmit}) => {
         }
     }, [userMenuItem]);
 
+    // 文字列をDateオブジェクトに変換
+    useEffect(() => {
+        if (typeof formValues.completionScheduleAt === 'string') {
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                completionScheduleAt: new Date(formValues.completionScheduleAt),
+            }));
+        }
+    }, [formValues.completionScheduleAt]);
+
     useEffect(() => {
         if (error !== null){
             console.log(error);
@@ -113,16 +123,20 @@ const ProgressForm = ({initialValues, onSubmit}) => {
         <form onSubmit={handleSubmit}>
 
             <div className="mb-3">
-                <TextField
-                    fullWidth
-                    id='parentId'
-                    label="進捗グループ"
-                    variant="outlined"
-                    type="number"
-                    value={formValues.parentId || ''}
-                    onChange={handleChange('parentId')}
-                    autoComplete='off'
-                />
+                {formValues.parentId &&
+                    <TextField
+                        fullWidth
+                        id='parentId'
+                        label="進捗グループ"
+                        variant="outlined"
+                        type="number"
+                        value={formValues?.parentId || ''}
+                        onChange={handleChange('parentId')}
+                        autoComplete='off'
+                        disabled
+                    />
+                }
+                
             </div>
             <br />
             <div className="mb-3">

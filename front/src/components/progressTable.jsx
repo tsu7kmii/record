@@ -55,9 +55,18 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                 {new Date(item.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
             </TableCell>
             <TableCell align="right">
-                <Button variant="outlined" type="submit" onClick={() => handleEditSubmit(item)}>
-                    Edit
-                </Button>
+
+                    {parent.deleteAt === null &&
+                        <Button variant="outlined" type="submit" onClick={() => handleEditSubmit(item)}>
+                            Edit
+                        </Button>
+                    }
+                    {parent.deleteAt !== null && item.deleteAt !== null &&
+                        new Date(item.deleteAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+                    }
+                    {parent.deleteAt !== null && item.deleteAt === null &&
+                        '未完了'
+                    }
             </TableCell>
         </TableRow>
     );
@@ -79,7 +88,15 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                     <TableCell align="right">STATUS</TableCell>
                     <TableCell align="right">最終更新日</TableCell>
                     <TableCell align="right">完了予定日</TableCell>
-                    <TableCell align="right">操作</TableCell>
+
+                    {parent.deleteAt === null &&
+                        <TableCell align="right">操作</TableCell>
+                    }
+                    {parent.deleteAt !== null &&
+                        <TableCell align="right">完了日</TableCell>
+                    }
+
+
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -93,13 +110,17 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
         </TableContainer>
         
         <br />
+        {parent.deleteAt === null &&
+            <>
+            <Button variant="outlined" type="submit" onClick={() => handleNewSubmit(parent.managementId)}>
+                グループに進捗を追加
+            </Button>
+            <br />
+            <br />
+            </>
+        }
 
-        <Button variant="outlined" type="submit" onClick={() => handleNewSubmit(parent.managementId)}>
-            グループに進捗を追加
-        </Button>
 
-        <br />
-        <br />
         </>
   );
 };

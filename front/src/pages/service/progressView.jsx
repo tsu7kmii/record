@@ -116,7 +116,20 @@ const ProgressView = () => {
             </>
             )}
 
-
+            {incomplateParent.length > 0 && (
+            <>
+            <Typography variant="h4" component="h2" gutterBottom>
+                完了済の進捗一覧
+            </Typography>
+                {complateParent.map((parent, index) => (
+                    <Fragment key={index}>
+                    <ProgressTable index={index} parentValue={parent} childValue={child} userList={userIdUsername} />
+                    <br />
+                    </Fragment>
+                ))}
+                
+            </>
+            )}
             
         </Box>
         </Container>

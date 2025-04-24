@@ -303,7 +303,6 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR); 
         }
-        passwordRepo.save(myToken);
 
         String url = conTextPath + "/user/password?token=" + token;
 

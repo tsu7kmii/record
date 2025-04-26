@@ -79,7 +79,7 @@ const ProgressView = () => {
     const handleNewSubmit = async () => {
         setError(null);
         
-        navigate('/progress/register')
+        navigate('/progress/register');
     };
     
 

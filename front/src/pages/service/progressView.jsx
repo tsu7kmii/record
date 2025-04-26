@@ -108,7 +108,7 @@ const ProgressView = () => {
                     進捗一覧
                 </Typography>
 
-                <Button variant="outlined" type="submit" size="large"  onClick={() => handleNewSubmit(parent.managementId)}>
+                <Button variant="outlined" type="submit" size="large"  onClick={() => handleNewSubmit()}>
                     新しく登録
                 </Button>
             </Box>

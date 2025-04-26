@@ -47,6 +47,22 @@ public class UserService {
 
 
     /**
+     * 検索されたアカウントが存在するかチェックする
+     * @param userId
+     * @return true
+     * @throws Exception
+     */
+    public boolean isUserNotDeleted(int userId) throws Exception {
+
+        if (!userRepo.existsByUserIdAndDeleteAtIsNull(userId)){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        return true;
+    }
+
+
+    /**
      * idマッチ、ユーザーネーム表示用
      * @return
      */

@@ -7,6 +7,17 @@ public final class ErrorMessages {
     private ErrorMessages() {}
 
     /**
+     * 投票関係のエラーメッセージ
+     */
+    public static final class VoteError {
+
+        public static final String DELETED_FAIL = "期限エラー";
+
+        public static final String VALIDATE_FAIL = "バリデーションエラー";
+  
+    }
+
+    /**
      * ユーザー認証関係のエラーメッセージ
      */
     public static final class UserErros {

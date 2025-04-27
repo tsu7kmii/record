@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.record.dto.vote.AnswerRequest;
 import com.example.record.dto.vote.AnswerResponse;
+import com.example.record.dto.vote.CountRequest;
+import com.example.record.dto.vote.CountResponse;
 import com.example.record.dto.vote.QuestionRequest;
 import com.example.record.dto.vote.QuestionResponse;
 import com.example.record.exception.ErrorMessages;
@@ -20,6 +22,7 @@ import com.example.record.models.dao.VoteAnswerRepository;
 import com.example.record.models.dao.VoteCountRepository;
 import com.example.record.models.dao.VoteQuestionRepository;
 import com.example.record.models.entities.VoteAnswer;
+import com.example.record.models.entities.VoteCount;
 import com.example.record.models.entities.VoteQuestion;
 
 @Service
@@ -29,13 +32,103 @@ public class VoteServise {
     VoteAnswerRepository voteAnswerRepo;
 
     @Autowired
-    VoteCountRepository VoteCountRepo;
+    VoteCountRepository voteCountRepo;
 
     @Autowired
     VoteQuestionRepository voteQuestionRepo;
 
     @Autowired
     UserAccountRepository userRepo;
+
+
+    /**
+     * 投票結果取得
+     * @param id
+     * @return
+     */
+    public List<CountResponse> getCountList(int id){
+
+        List<VoteCount> counts = voteCountRepo.findByVoteQuestionIdAndDeleteAtIsNull(id);
+
+        List<CountResponse> countRes = new ArrayList<>();
+        for (VoteCount count : counts){
+            CountResponse res = new CountResponse();
+            res.setVoteCountId(count.getVoteCountId());
+            res.setVoteQuestionId(count.getVoteQuestionId());
+            res.setVoteAnswerId(count.getVoteAnswerId());
+            res.setUserId(count.getUser().getUserId());
+            res.setUsername(count.getUser().getUsername());
+            res.setCreateAt(count.getCreateAt());
+
+            countRes.add(res);
+        }
+        return countRes;
+    }
+
+
+    /**
+     * 投票を削除
+     * @param request
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCount(CountRequest request) throws Exception {
+
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        // 開催中か
+        if (!voteCountRepo.existsByVoteQuestionIdAndVoteAnswerIdAndUserIdAndDeleteAtIsNull(request.getVoteQuestionId(), request.getVoteAnswerId(), request.getUserId())){
+            throw new Exception(ErrorMessages.VoteError.OVERLAPPING_FAIL);
+        }
+
+        // 有効なレコードか
+        if (!voteCountRepo.existsByVoteCountIdAndDeleteAtIsNull(request.getVoteCountId())){
+            throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
+        }
+
+        VoteCount count = voteCountRepo.findByVoteCountId(request.getVoteCountId());
+        count.setUpdateAt(nowDateTime);
+        count.setDeleteAt(nowDateTime);
+
+        // 同一人物か
+        if (count.getUser().getUserId() != request.getUserId()){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        try {
+            voteCountRepo.save(count);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
+
+    /**
+     * 投票を追加
+     * @param request
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void createCount(CountRequest request) throws Exception {
+
+        // 開催中か
+        if (!voteCountRepo.existsByVoteQuestionIdAndVoteAnswerIdAndUserIdAndDeleteAtIsNull(request.getVoteQuestionId(), request.getVoteAnswerId(), request.getUserId())){
+            throw new Exception(ErrorMessages.VoteError.OVERLAPPING_FAIL);
+        }
+
+        VoteCount count = new VoteCount();
+
+        count.setVoteQuestionId(request.getVoteQuestionId());
+        count.setVoteAnswerId(request.getVoteAnswerId());
+        count.setUser(userRepo.findByUserId(request.getUserId()));
+
+        try {
+            voteCountRepo.save(count);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
 
     /**
      * 回答リスト取得
@@ -211,7 +304,7 @@ public class VoteServise {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
-        if (voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNotNull(request.getVoteQuestionId())){
+        if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(request.getVoteQuestionId())){
             throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
         }
 
@@ -238,7 +331,7 @@ public class VoteServise {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
-        if (voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNotNull(request.getVoteQuestionId())){
+        if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(request.getVoteQuestionId())){
             throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
         }
 

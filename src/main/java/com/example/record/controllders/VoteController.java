@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.record.dto.vote.AnswerRequest;
 import com.example.record.dto.vote.AnswerResponse;
+import com.example.record.dto.vote.CountRequest;
+import com.example.record.dto.vote.CountResponse;
 import com.example.record.dto.vote.QuestionIdRequest;
 import com.example.record.dto.vote.QuestionRequest;
 import com.example.record.dto.vote.QuestionResponse;
@@ -38,6 +40,70 @@ public class VoteController {
 
     @Autowired
     UserService userService;
+
+    /**
+     * 投票結果取得
+     * @param questionidRequest
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/question/count")
+    public ResponseEntity<List<CountResponse>> getCountList(@Validated @RequestBody QuestionIdRequest questionidRequest, BindingResult bindingResult) throws Exception {
+        
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        List<CountResponse> countList = voteServise.getCountList(questionidRequest.getVoteQuestionId());
+
+        return new ResponseEntity<>(countList, HttpStatus.OK);
+    }
+
+    
+    /**
+     * 投票を削除
+     * @param countRequest
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
+    @DeleteMapping("count")
+    public ResponseEntity<Void> deleteCount(@Validated @RequestBody CountRequest countRequest, BindingResult bindingResult) throws Exception {
+        
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        userService.isUserNotDeleted(countRequest.getUserId());
+
+        voteServise.deleteCount(countRequest);
+        
+        return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * 投票を追加
+     * @param countRequest
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/count")
+    public ResponseEntity<Void> createCount(@Validated @RequestBody CountRequest countRequest, BindingResult bindingResult) throws Exception {
+        
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        userService.isUserNotDeleted(countRequest.getUserId());
+
+        voteServise.createCount(countRequest);
+        
+        return ResponseEntity.ok().build();
+    }
+    
 
     
     /**

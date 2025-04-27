@@ -14,5 +14,5 @@ public interface VoteQuestionRepository extends JpaRepository<VoteQuestion, Inte
     
     VoteQuestion findByVoteQuestionId(int voteQuestionId);
 
-    boolean existsByVoteQuestionIdAndDeleteAtIsNotNull(int voteQuestionId);
+    boolean existsByVoteQuestionIdAndDeleteAtIsNull(int voteQuestionId);
 }

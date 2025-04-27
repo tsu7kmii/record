@@ -11,6 +11,8 @@ public final class ErrorMessages {
      */
     public static final class VoteError {
 
+        public static final String OVERLAPPING_FAIL = "重複エラー";
+
         public static final String DELETED_FAIL = "期限エラー";
 
         public static final String VALIDATE_FAIL = "バリデーションエラー";

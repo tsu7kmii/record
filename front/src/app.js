@@ -14,6 +14,9 @@ import AccessDenied from './pages/util/accessDenied';
 import ProgressRegister from './pages/service/progressRegister';
 import ProgressView from './pages/service/progressView';
 import ProgressEdit from './pages/service/progressEdit';
+import VoteView from './pages/service/voteView';
+import VoteRegister from './pages/service/voteRegistr';
+import VoteEdit from './pages/service/voteEdit';
 import { UserContext } from './components/userProvider';
 import Header from './components/header';
 
@@ -36,9 +39,13 @@ function App() {
         <Route path="/auth/email" element={<ProtectedLoginRoute><UpdateEmail /></ProtectedLoginRoute>} />
         <Route path="/admin/users" element={<ProtectedRoleRoute><UserList /></ProtectedRoleRoute>} />
 
-        <Route path='/progress/view' element={<ProtectedRoleRoute><ProgressView /></ProtectedRoleRoute>}/>
-        <Route path='/progress/register' element={<ProtectedRoleRoute><ProgressRegister /></ProtectedRoleRoute>}/>
-        <Route path='/progress/edit' element={<ProtectedRoleRoute><ProgressEdit /></ProtectedRoleRoute>}/>
+        <Route path='/progress/view' element={<ProtectedLoginRoute><ProgressView /></ProtectedLoginRoute>}/>
+        <Route path='/progress/register' element={<ProtectedLoginRoute><ProgressRegister /></ProtectedLoginRoute>}/>
+        <Route path='/progress/edit' element={<ProtectedLoginRoute><ProgressEdit /></ProtectedLoginRoute>}/>
+
+        <Route path='/vote/view' element={<ProtectedLoginRoute><VoteView /></ProtectedLoginRoute>}/>
+        <Route path='/vote/register' element={<ProtectedLoginRoute><VoteRegister /></ProtectedLoginRoute>}/>
+        <Route path='/vote/edit' element={<ProtectedLoginRoute><VoteEdit /></ProtectedLoginRoute>}/>
 
         <Route path="*" element={<NotFound />} />
 

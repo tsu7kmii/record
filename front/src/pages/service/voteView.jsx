@@ -32,11 +32,6 @@ const VoteView = () => {
         
         navigate('/vote/register');
     };
-
-    const handleEditSubmit = async () => {
-        setError(null);
-        
-    };
     
 
     useEffect(() => {

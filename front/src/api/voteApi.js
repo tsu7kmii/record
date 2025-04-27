@@ -1,5 +1,18 @@
 import { sendJsonData } from './apiUtils';
 
+
+export const getCountList = async (formData) => {
+    return sendJsonData('/api/vote/question/count', formData, 'post');
+};
+
+export const deleteCount = async (formData) => {
+    return sendJsonData('/api/vote/count', formData, 'delete');
+};
+
+export const registerCount = async (formData) => {
+    return sendJsonData('/api/vote/count', formData, 'post');
+};
+
 export const updateAnswer = async (formData) => {
     return sendJsonData('/api/vote/answer', formData, 'put');
 };

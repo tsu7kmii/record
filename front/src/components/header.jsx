@@ -81,7 +81,7 @@ const Header = () => {
                         <Link to="/">Home</Link>
                     </li>
                     <li>
-                        <Link to="/">Menu</Link>
+                        <Link to="/vote/view">Vote</Link>
                     </li>
                     <li>
                         <Link to="/progress/view">progress</Link>

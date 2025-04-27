@@ -63,7 +63,7 @@ const VoteRegister = () => {
         <Container maxWidth="sm" sx={{ minHeight: '100vh' }}>
         <Box mt={5}>
             <Typography variant="h4" component="h2" gutterBottom>
-            進捗を追加する
+            投票を追加する
             </Typography>
             {error && (
             <>

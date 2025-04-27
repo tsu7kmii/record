@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Box, Typography, Modal, Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormGroup, Checkbox, Grid, List, ListItem, ListItemText } from '@mui/material';
+import { Alert, Button, Box, Typography, Modal, Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormGroup, Checkbox, Grid, List, ListItem, ListItemText } from '@mui/material';
 import { getAnswerList, registerCount, getCountList, deleteCount } from '../api/voteApi';
 import { handleApiError } from '../api/errorHandler';
 import { UserContext } from "./userProvider";
@@ -26,7 +26,7 @@ export default function VoteModal({question}) {
   const [answerList, setAnswerList] = useState([]);
   const [countList, setCountList] = useState([]);
   const [isVoted, setIsVoted] = useState(false);
-  const [radioValue, setRadioValue] = useState("");
+  const [radioValue, setRadioValue] = useState(-1);
   const { userData } = useContext(UserContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -47,6 +47,11 @@ export default function VoteModal({question}) {
 
     const questionId = question.voteQuestionId;
     const userId = userData.userId;
+
+    if (radioValue === -1){
+      setError(`選択されていません`);
+      return;
+    }
     
     try {
       const response = await registerCount({voteQuestionId:questionId,voteAnswerId:radioValue,userId:userId});
@@ -122,14 +127,9 @@ export default function VoteModal({question}) {
       setSecondary(false);
       fetchAnswerList();
       fetchCountList();
+      setRadioValue(-1);
     }
   }, [open]);
-
-  useEffect(() => {
-    if (error !== null){
-        console.log(error);
-    }
-  }, [error]);
 
   return (
     <div>
@@ -147,12 +147,18 @@ export default function VoteModal({question}) {
             <Typography variant="h4" component="h2" gutterBottom>
               {question.title}
             </Typography>
-            {question.deleteAt === null &&
+            {question.deleteAt === null && question.userId === userData.userId &&
               <Button variant="outlined" type="submit" size="large"  onClick={() => handleEditSubmit(question, answerList)}>
                   編集
               </Button>
             }   
           </Box>
+          {error && (
+            <>
+              <Alert severity="error" className="mb-3">{error}</Alert>
+              <br />
+            </>
+          )}
 
           {question.deleteAt === null && isVoted === false && 
             <FormControl component="fieldset">
@@ -169,7 +175,7 @@ export default function VoteModal({question}) {
               </Box>
             </FormControl>
           }
-          {isVoted === true && 
+          {(isVoted === true || question.deleteAt !== null) && 
 
             <Grid>
               <Typography variant="h6" >
@@ -212,7 +218,7 @@ export default function VoteModal({question}) {
             </Grid>
           }
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            {isVoted === true &&
+            {(isVoted === true || question.deleteAt !== null) &&
               <FormGroup row>
                 <FormControlLabel
                   control={

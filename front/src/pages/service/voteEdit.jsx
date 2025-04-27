@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Container, Typography, Box, Alert } from '@mui/material';
+import { Container, Typography, Box, Alert, Button } from '@mui/material';
 import VoteForm from '../../components/voteForm';
-import { updateQuestion, updateAnswer } from '../../api/voteApi';
+import { updateQuestion, updateAnswer, deleteQuestion } from '../../api/voteApi';
 import { handleApiError } from '../../api/errorHandler';
 
 
@@ -58,6 +58,21 @@ const VoteEdit = () => {
         }
     };
 
+    const handleDelSubmit = async () => {
+        setError(null);
+
+        try {
+            const response = await deleteQuestion(initialValues);
+            if (response.status === 200) {
+                navigate('/vote/view');
+            } else {
+                setError(`削除に失敗しました: ${response.data.message}`);
+            }
+        } catch (error) {
+            setError(handleApiError(error));
+        }
+    };
+
 
     useEffect(() => {
         if (initialValues === initValues){
@@ -82,9 +97,16 @@ const VoteEdit = () => {
     return (
         <Container maxWidth="sm" sx={{ minHeight: '100vh' }}>
         <Box mt={5}>
-            <Typography variant="h4" component="h2" gutterBottom>
-            投票を編集する
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" component="h2" gutterBottom>
+                投票を編集する
+                </Typography>
+                {!error &&
+                    <Button variant="outlined" type="submit" onClick={() => handleDelSubmit()} sx={{ color: 'red', borderColor: 'red' }}>
+                        削除して公開する
+                    </Button>
+                }
+            </Box>
             {error && (
             <>
                 <br />

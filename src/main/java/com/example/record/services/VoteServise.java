@@ -76,12 +76,12 @@ public class VoteServise {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
-        // 開催中か
-        if (!voteCountRepo.existsByVoteQuestionIdAndVoteAnswerIdAndUserIdAndDeleteAtIsNull(request.getVoteQuestionId(), request.getVoteAnswerId(), request.getUserId())){
-            throw new Exception(ErrorMessages.VoteError.OVERLAPPING_FAIL);
+        // 質問が期間内か(見つけたらOK)
+        if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(request.getVoteQuestionId())){
+            throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
         }
 
-        // 有効なレコードか
+        // 有効なレコードか(見つけたらOK)
         if (!voteCountRepo.existsByVoteCountIdAndDeleteAtIsNull(request.getVoteCountId())){
             throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
         }
@@ -111,8 +111,13 @@ public class VoteServise {
     @Transactional(rollbackFor = Exception.class)
     public void createCount(CountRequest request) throws Exception {
 
-        // 開催中か
-        if (!voteCountRepo.existsByVoteQuestionIdAndVoteAnswerIdAndUserIdAndDeleteAtIsNull(request.getVoteQuestionId(), request.getVoteAnswerId(), request.getUserId())){
+        // 質問が期間内か(見つけたらOK)
+        if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(request.getVoteQuestionId())){
+            throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
+        }
+
+        // 重複しないか(見つけたらダメ)
+        if (voteCountRepo.existsByVoteQuestionIdAndUserAndDeleteAtIsNull(request.getVoteQuestionId(), userRepo.findByUserId(request.getUserId()))){
             throw new Exception(ErrorMessages.VoteError.OVERLAPPING_FAIL);
         }
 
@@ -167,6 +172,11 @@ public class VoteServise {
     public void updateAnster(List<AnswerRequest> lRequests) throws Exception{
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        // 期間確認(見つけたらOK)
+        if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(lRequests.get(0).getVoteQuestionId())){
+            throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
+        }
 
         List<VoteAnswer> answerList = new ArrayList<>();
 
@@ -304,6 +314,7 @@ public class VoteServise {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
+        // 期間確認(見つけたらOK)
         if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(request.getVoteQuestionId())){
             throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
         }
@@ -331,6 +342,7 @@ public class VoteServise {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
+        // 期間確認(見つけたらOK)
         if (!voteQuestionRepo.existsByVoteQuestionIdAndDeleteAtIsNull(request.getVoteQuestionId())){
             throw new Exception(ErrorMessages.VoteError.DELETED_FAIL);
         }

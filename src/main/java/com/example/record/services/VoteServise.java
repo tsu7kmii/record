@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.record.dto.vote.AnswerRequest;
+import com.example.record.dto.vote.AnswerResponse;
 import com.example.record.dto.vote.QuestionRequest;
 import com.example.record.dto.vote.QuestionResponse;
 import com.example.record.exception.ErrorMessages;
@@ -36,7 +37,95 @@ public class VoteServise {
     @Autowired
     UserAccountRepository userRepo;
 
+    /**
+     * 回答リスト取得
+     * @return
+     */
+    public List<AnswerResponse> getAnswerList(int id){
 
+        List<VoteAnswer> answers = voteAnswerRepo.findByVoteQuestionIdAndDeleteAtIsNull(id);
+
+        List<AnswerResponse> answerRes = new ArrayList<>();
+        for (VoteAnswer answer : answers){
+
+            AnswerResponse res = new AnswerResponse();
+            res.setVoteAnswerId(answer.getVoteAnswerId());
+            res.setVoteQuestionId(answer.getVoteQuestionId());
+            res.setUserId(answer.getUser().getUserId());
+            res.setUsername(answer.getUser().getUsername());
+            res.setAnswer(answer.getAnswer());
+            res.setCreateAt(answer.getCreateAt());
+            res.setUpdateAt(answer.getUpdateAt());
+            res.setDeleteAt(answer.getDeleteAt());
+
+            answerRes.add(res);
+        }
+
+        return answerRes;
+    }
+
+
+    /**
+     * 回答内容更新(削除含む)
+     * @param lRequests
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAnster(List<AnswerRequest> lRequests) throws Exception{
+
+        Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        List<VoteAnswer> answerList = new ArrayList<>();
+
+        List<VoteAnswer> beforeAnswers = voteAnswerRepo.findByVoteQuestionId(lRequests.get(0).getVoteQuestionId());
+
+        for (AnswerRequest request : lRequests){
+
+            if (request.getVoteAnswerId() != null){
+                // 更新時に内容が更新された項目
+                VoteAnswer answer = voteAnswerRepo.findByVoteAnswerId(request.getVoteAnswerId());
+                answer.setAnswer(request.getAnswer());
+                answer.setUpdateAt(nowDateTime);
+
+                answerList.add(answer);
+
+                beforeAnswers.removeIf(ans -> ans.getVoteAnswerId() == answer.getVoteAnswerId());
+
+            } else {
+                // 更新時に新規追加した項目
+                VoteAnswer answer = new VoteAnswer();
+                answer.setVoteQuestionId(request.getVoteQuestionId());
+                answer.setUser(userRepo.findByUserId(request.getUserId()));
+                answer.setAnswer(request.getAnswer());
+
+                answerList.add(answer);
+            }
+        }
+
+        // 更新時に削除した項目
+        for (VoteAnswer beforeAns : beforeAnswers){
+            VoteAnswer answer = voteAnswerRepo.findByVoteAnswerId(beforeAns.getVoteAnswerId());
+
+            answer.setUpdateAt(nowDateTime);
+            answer.setDeleteAt(nowDateTime);
+
+            answerList.add(answer);
+        }
+
+
+        try {
+            voteAnswerRepo.saveAll(answerList);
+        } catch (Exception e) {
+            throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
+        }
+    }
+
+
+    /**
+     * 回答登録
+     * @param lRequests
+     * @throws Exception
+     */
     @Transactional(rollbackFor = Exception.class)
     public void createAnster(List<AnswerRequest> lRequests) throws Exception{
 
@@ -145,7 +234,7 @@ public class VoteServise {
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateQuestion(QuestionRequest request) throws Exception{
+    public int updateQuestion(QuestionRequest request) throws Exception{
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
@@ -160,7 +249,8 @@ public class VoteServise {
         question.setUpdateAt(nowDateTime);
 
         try {
-            voteQuestionRepo.save(question);
+            VoteQuestion savedQuestion = voteQuestionRepo.save(question);
+            return savedQuestion.getVoteQuestionId();
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR);
         }

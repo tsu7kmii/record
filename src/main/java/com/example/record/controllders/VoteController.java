@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.record.dto.vote.AnswerRequest;
+import com.example.record.dto.vote.AnswerResponse;
+import com.example.record.dto.vote.QuestionIdRequest;
 import com.example.record.dto.vote.QuestionRequest;
 import com.example.record.dto.vote.QuestionResponse;
 import com.example.record.exception.ErrorMessages;
@@ -37,6 +39,56 @@ public class VoteController {
     @Autowired
     UserService userService;
 
+    
+    /**
+     * 質問別回答一覧取得
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/question/answer")
+    public ResponseEntity<List<AnswerResponse>> getAnswerList(@Validated @RequestBody QuestionIdRequest questionidRequest, BindingResult bindingResult) throws Exception {
+        
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        List<AnswerResponse> answerList = voteServise.getAnswerList(questionidRequest.getVoteQuestionId());
+
+        return new ResponseEntity<>(answerList, HttpStatus.OK);
+    }
+
+
+    /**
+     * 質問追加時の回答変更
+     * @param lAnswerRequests
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
+    @PutMapping("/answer")
+    public ResponseEntity<Void> updateAnswer(@Validated @RequestBody List<AnswerRequest> lAnswerRequests, BindingResult bindingResult) throws Exception {
+        
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        for (AnswerRequest request : lAnswerRequests){
+            userService.isUserNotDeleted(request.getUserId());
+        }
+
+        voteServise.updateAnster(lAnswerRequests);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * 質問追加時の回答追加
+     * @param lAnswerRequests
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/answer")
     public ResponseEntity<Void> createAnswer(@Validated @RequestBody List<AnswerRequest> lAnswerRequests, BindingResult bindingResult) throws Exception {
         
@@ -94,16 +146,14 @@ public class VoteController {
      * @throws Exception
      */
     @PutMapping("/question")
-    public ResponseEntity<Void> updateQuestion(@Validated @RequestBody QuestionRequest questionRequest, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<Object> updateQuestion(@Validated @RequestBody QuestionRequest questionRequest, BindingResult bindingResult) throws Exception {
         
         if (bindingResult.hasErrors()) {
             throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
         }
 
-        voteServise.updateQuestion(questionRequest);
-
-        
-        return ResponseEntity.ok().build();
+        int voteQuestionId = voteServise.updateQuestion(questionRequest);
+        return ResponseEntity.ok().body(Map.of("voteQuestionId", voteQuestionId));
     }
 
     /**

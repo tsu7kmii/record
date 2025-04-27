@@ -147,10 +147,11 @@ export default function VoteModal({question}) {
             <Typography variant="h4" component="h2" gutterBottom>
               {question.title}
             </Typography>
-
-            <Button variant="outlined" type="submit" size="large"  onClick={() => handleEditSubmit(question, answerList)}>
-                編集
-            </Button>
+            {question.deleteAt === null &&
+              <Button variant="outlined" type="submit" size="large"  onClick={() => handleEditSubmit(question, answerList)}>
+                  編集
+              </Button>
+            }   
           </Box>
 
           {question.deleteAt === null && isVoted === false && 

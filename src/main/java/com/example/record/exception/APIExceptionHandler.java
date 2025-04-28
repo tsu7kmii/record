@@ -25,6 +25,12 @@ public class APIExceptionHandler {
             return;
         }
 
+        if (ex.getMessage() != null && ex.getMessage().contains("Request method")) {
+            // リダイレクト処理
+            response.sendRedirect("/error/not-found");
+            return;
+        }
+
         // 通常のエラーレスポンス
         response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
         response.setContentType("application/json;charset=UTF-8");

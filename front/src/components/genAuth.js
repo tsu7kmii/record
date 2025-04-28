@@ -21,7 +21,7 @@ const GenAuth = () => {
 
         try {
             const response = await getAuth({});
-            if (response.status === 200) {
+            if (response.status === 200 && response.data && response.data.userId && response.data.username) {
                 setUserData(response.data);
             } else {
                 setUserData(null);
@@ -36,6 +36,12 @@ const GenAuth = () => {
     useEffect(() => {
         fetchAuth();
     }, []);
+
+    useEffect(() => {
+        if (error !== null){
+            console.log(error);
+        }
+    }, [error]);
 
     return (
         <>    

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Top from './pages/top';
 import Login from './pages/auth/login';
 import UserRegister from './pages/auth/userRegister';
@@ -11,6 +11,7 @@ import UserList from './pages/auth/userList';
 import Success from './pages/util/success';
 import NotFound from './pages/util/notFound';
 import AccessDenied from './pages/util/accessDenied';
+import PleaseSignin from './pages/util/pleaseSignin';
 import ProgressRegister from './pages/service/progressRegister';
 import ProgressView from './pages/service/progressView';
 import ProgressEdit from './pages/service/progressEdit';
@@ -54,6 +55,8 @@ function App() {
         {/* error */}
         <Route path="/error/access-denied" element={<AccessDenied />} />
         <Route path="/error/not-found" element={<NotFound />} />
+        <Route path="/error/not-signin" element={<PleaseSignin />} />
+
 
         <Route path="*" element={<NotFound />} />
 
@@ -74,7 +77,7 @@ function App() {
 function ProtectedLoginRoute({children}){
   const { userData } = useContext(UserContext);
 
-  return userData ? children : <Navigate to="/signin" />;
+  return userData ? children : <PleaseSignin />;
 }
 
 /**

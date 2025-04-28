@@ -184,12 +184,12 @@ const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
                             onChange={handleChange('userId')}
                             autoComplete="off"
                             MenuProps={{
-                            PaperProps: {
-                                style: {
-                                    maxHeight: 150,
-                                    overflowY: 'auto',
+                                PaperProps: {
+                                    style: {
+                                        maxHeight: 150,
+                                        overflowY: 'auto',
+                                    },
                                 },
-                            },
                             }}
                         >
                             {userMenuItem.map((item, index) => (

@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Container, Typography, Box } from '@mui/material';
 
-
-
+/**
+ * Successコンポーネント
+ * 
+ * このコンポーネントは、処理が正常に完了したことを示すメッセージを表示します。
+ * また、ユーザーをログイン画面に戻すためのリンクを提供します。
+ * 
+ * @returns {JSX.Element} 成功メッセージとリンクを含むコンテナ
+ */
 const Success = () => {
 
     return (

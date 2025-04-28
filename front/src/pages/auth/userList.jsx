@@ -3,11 +3,18 @@ import { getUserList, deleteUser, updateRoleToAdmin, updateRoleToUser } from '..
 import { handleApiError } from '../../api/errorHandler';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
+/**
+ * ユーザーリストを表示し、ユーザーの権限変更や削除を行うコンポーネント
+ */
 const UserList = () => {
 
     const [error, setError] = useState(null);
     const [rows, setRows] = useState([]);
 
+    /**
+     * ユーザーの権限を変更する関数
+     * @param {Object} user - 権限を変更するユーザーオブジェクト
+     */
     const handleChangeRole = async (user) => {
         setError(null);
 
@@ -15,40 +22,44 @@ const UserList = () => {
         let response;
     
         try {
-
             if (user.permissionLevel === 2){
                 response = await updateRoleToAdmin({'userId':userId});
             } else {
                 response = await updateRoleToUser({'userId':userId});
             }
 
-          if (response.status === 200) {
-            fetchUserList();
-          } else {
-            setError(`権限の変更に失敗しました: ${response.data.message}`);
-          }
+            if (response.status === 200) {
+                fetchUserList();
+            } else {
+                setError(`権限の変更に失敗しました: ${response.data.message}`);
+            }
         } catch (error) {
             setError(handleApiError(error));
         }
-          
     };
 
+    /**
+     * ユーザーを削除する関数
+     * @param {number} userId - 削除するユーザーのID
+     */
     const handleDeleteUser = async (userId) => {
         setError(null);
     
         try {
-          const response = await deleteUser({'userId':userId});
-          if (response.status === 200) {
-            fetchUserList();
-          } else {
-            setError(`ユーザーの削除に失敗しました: ${response.data.message}`);
-          }
+            const response = await deleteUser({'userId':userId});
+            if (response.status === 200) {
+                fetchUserList();
+            } else {
+                setError(`ユーザーの削除に失敗しました: ${response.data.message}`);
+            }
         } catch (error) {
             setError(handleApiError(error));
         }
-          
     };
 
+    /**
+     * ユーザーリストを取得する関数
+     */
     const fetchUserList = async () => {
         setError(null);
 
@@ -73,7 +84,6 @@ const UserList = () => {
             console.error(error);
         };
     }, [error]);
-
 
     return (
         <>

@@ -5,6 +5,7 @@ import { getAnswerList, registerCount, getCountList, deleteCount } from '../api/
 import { handleApiError } from '../api/errorHandler';
 import { UserContext } from "./userProvider";
 
+// モーダルのスタイルを定義
 const style = {
   position: 'absolute',
   top: '50%',
@@ -18,6 +19,7 @@ const style = {
   p: 4,
 };
 
+// VoteModalコンポーネントを定義
 export default function VoteModal({question}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -32,16 +34,26 @@ export default function VoteModal({question}) {
   const [error, setError] = useState(null);
   const [secondary, setSecondary] = useState(false);
 
-
+  /**
+   * 編集画面に遷移するための関数
+   * @param {Object} question - 質問オブジェクト
+   * @param {Array} answerList - 回答リスト
+   */
   const handleEditSubmit = async (question, answerList) => {
-    
     navigate('/vote/edit',{state: {question:question, answerList:answerList}});
   };
 
+  /**
+   * ラジオボタンの選択値を変更する関数
+   * @param {Object} e - イベントオブジェクト
+   */
   const radioChange = (e) => {
     setRadioValue(e.target.value);
   };
 
+  /**
+   * 投票を送信するための関数
+   */
   const handleVoteSubmit = async () => {
     setError(null);
 
@@ -65,6 +77,9 @@ export default function VoteModal({question}) {
     }
   };
 
+  /**
+   * 投票を削除するための関数
+   */
   const handleVoteDelSubmit = async () => {
     setError(null);
 
@@ -86,6 +101,9 @@ export default function VoteModal({question}) {
     }
   };
 
+  /**
+   * 回答リストを取得するための関数
+   */
   const fetchAnswerList = async () => {
     setError(null);
 
@@ -103,6 +121,9 @@ export default function VoteModal({question}) {
     }
   };
 
+  /**
+   * 投票数リストを取得するための関数
+   */
   const fetchCountList = async () => {
     setError(null);
 
@@ -121,7 +142,7 @@ export default function VoteModal({question}) {
     }
   };
 
-
+  // モーダルが開かれたときにデータを取得する
   useEffect(() => {
     if(open){
       setSecondary(false);

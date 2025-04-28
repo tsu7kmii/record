@@ -5,12 +5,16 @@ import VoteForm from '../../components/voteForm';
 import { updateQuestion, updateAnswer, deleteQuestion } from '../../api/voteApi';
 import { handleApiError } from '../../api/errorHandler';
 
-
+/**
+ * VoteEditコンポーネント
+ * 投票の編集を行うためのフォームを表示し、更新や削除の処理を行う。
+ */
 const VoteEdit = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [error, setError] = useState(null);
 
+    // 初期値の設定
     const initValues = {
         voteQuestionId: null,
         userId: null,
@@ -18,6 +22,7 @@ const VoteEdit = () => {
         period: null,
     };
 
+    // 初期回答リストの設定
     const initAnswerValueList = Array.from({ length: 2 }, () => ({
         voteAnswerId: null,
         voteQuestionId: null,
@@ -25,9 +30,15 @@ const VoteEdit = () => {
         answer: '',
     }));
 
+    // locationからの初期値取得
     const initialValues = location.state?.question || initValues;
     const initialAnswerValueList = location.state?.answerList || initAnswerValueList;
 
+    /**
+     * フォームの送信処理
+     * @param {Object} formValues - フォームの入力値
+     * @param {Array} answerValueList - 回答リスト
+     */
     const handleSubmit = async (formValues, answerValueList) => {
         setError(null);
 
@@ -58,6 +69,9 @@ const VoteEdit = () => {
         }
     };
 
+    /**
+     * 削除ボタンの送信処理
+     */
     const handleDelSubmit = async () => {
         setError(null);
 
@@ -73,7 +87,7 @@ const VoteEdit = () => {
         }
     };
 
-
+    // 初期値のチェック
     useEffect(() => {
         if (initialValues === initValues){
             setError("編集内容をロストしました")
@@ -83,6 +97,7 @@ const VoteEdit = () => {
     
     }, [initialValues]);
 
+    // 初期回答リストのチェック
     useEffect(() => {
         if (initialAnswerValueList === initAnswerValueList){
             setError("編集内容をロストしました")
@@ -91,8 +106,6 @@ const VoteEdit = () => {
         }
     
     }, [initialAnswerValueList]);
-
-
 
     return (
         <Container maxWidth="sm" sx={{ minHeight: '100vh' }}>
@@ -128,6 +141,6 @@ const VoteEdit = () => {
         </Box>
         </Container>
     );
-    };
+};
 
 export default VoteEdit;

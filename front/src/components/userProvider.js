@@ -1,10 +1,13 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-
 export const UserContext = createContext();
 
 /**
  * 再読み込みに対応したログイン情報保持するコンテキストプロバイダー
+ * 
+ * @param {Object} props - コンポーネントのプロパティ
+ * @param {React.ReactNode} props.children - 子コンポーネント
+ * @returns {JSX.Element} UserContext.Providerを返す
  */
 export const UserProvider = ({ children }) => {
 
@@ -23,7 +26,6 @@ export const UserProvider = ({ children }) => {
     }
   }, [userData]);
   
-
   return (
     <UserContext.Provider value={{ userData, setUserData }}>
       {children}

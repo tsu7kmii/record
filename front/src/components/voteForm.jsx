@@ -6,7 +6,13 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { ja } from 'date-fns/locale';
 import { MdDeleteOutline } from "react-icons/md";
 
-
+/**
+ * VoteFormコンポーネント
+ * @param {Object} props - コンポーネントのプロパティ
+ * @param {Object} props.initialValues - 初期フォーム値
+ * @param {Array} props.initAnswerValueList - 初期回答リスト
+ * @param {Function} props.onSubmit - フォーム送信時のコールバック関数
+ */
 const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
 
     const [formValues, setFormValues] = useState(initialValues);
@@ -18,6 +24,10 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
     const oneWeekLater = new Date();
     oneWeekLater.setDate(oneWeekLater.getDate() + 7);
 
+    /**
+     * 回答を削除するハンドラー
+     * @param {number} index - 削除する回答のインデックス
+     */
     const handleDeleteAnswer = (index) => {
         // 先頭2個は削除禁止
         if (index < 2) return;
@@ -25,12 +35,20 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
         setAnswerList((prevList) => prevList.filter((_, i) => i !== index));
     };
 
+    /**
+     * 回答を変更するハンドラー
+     * @param {number} index - 変更する回答のインデックス
+     * @returns {Function} イベントハンドラー
+     */
     const handleAnswerChange = (index) => (event) => {
         const updatedAnswers = [...answerList];
         updatedAnswers[index].answer = event.target.value; 
         setAnswerList(updatedAnswers);
     };
 
+    /**
+     * 回答を追加するハンドラー
+     */
     const handleAddAnswer = () => {
         setAnswerList([...answerList, {
             voteAnswerId: null,
@@ -40,7 +58,11 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
         }]);
     };
 
-
+    /**
+     * フォームのフィールドを変更するハンドラー
+     * @param {string} field - 変更するフィールド名
+     * @returns {Function} イベントハンドラー
+     */
     const handleChange = (field) => (event) => {
         setFormValues({
         ...formValues,
@@ -48,6 +70,10 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
         });
     };
 
+    /**
+     * 日付を変更するハンドラー
+     * @param {Date} newDate - 新しい日付
+     */
     const handleDateChange = (newDate) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -55,13 +81,16 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
         }));
     };
 
+    /**
+     * フォーム送信時のハンドラー
+     * @param {Event} e - イベントオブジェクト
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         onSubmit(formValues, answerList);
     };
 
     useEffect(() => {
-
         // 期限日時がnullの場合、一週間後の日付を入れる
         if (formValues.period === '' || formValues.period === null){
             setFormValues((prevValues) => ({
@@ -69,7 +98,6 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
                 period: oneWeekLater,
             }));
         }
-
     }, [formValues.period]);
 
     // 文字列をDateオブジェクトに変換

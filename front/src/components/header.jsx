@@ -14,7 +14,13 @@ import GenAuth from "./genAuth";
 import '../css/header.css';
 import favicon from '../img/favicon.ico'
 
-
+/**
+ * Headerコンポーネント
+ * 
+ * アプリケーションのヘッダーを表示し、ナビゲーションリンクやユーザーのログイン状態に応じたメニューを提供します。
+ * 
+ * @returns {JSX.Element} ヘッダーコンポーネント
+ */
 const Header = () => {
 
     const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +28,11 @@ const Header = () => {
     const [error, setError] = useState(null);
     const { userData, setUserData } = useContext(UserContext);
 
+    /**
+     * ログアウト処理を行う関数
+     * 
+     * @param {Event} e - フォーム送信イベント
+     */
     const logoutHandleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -65,7 +76,6 @@ const Header = () => {
             console.log(error);
         }
     }, [error]);
-
 
     return (
         <>        
@@ -127,10 +137,17 @@ const Header = () => {
 
 export default Header;
 
-
-const  ProtectedRoleView = ({children}) => {
+/**
+ * ProtectedRoleViewコンポーネント
+ * 
+ * ユーザーが管理者権限を持っているかどうかを確認し、持っている場合に子コンポーネントを表示します。
+ * 
+ * @param {Object} props - コンポーネントのプロパティ
+ * @param {JSX.Element} props.children - 管理者権限が必要なコンポーネント
+ * @returns {JSX.Element|null} 管理者権限がある場合は子コンポーネント、ない場合はnull
+ */
+const ProtectedRoleView = ({children}) => {
     const { userData } = useContext(UserContext);
   
     return userData && userData.permissionLevel === 1 ? children : null;
-  
 }

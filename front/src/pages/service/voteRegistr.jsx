@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Alert } from '@mui/material';
 import VoteForm from '../../components/voteForm';
@@ -6,13 +6,18 @@ import { registerQuestion, registerAnswer } from '../../api/voteApi';
 import { handleApiError } from '../../api/errorHandler';
 import { UserContext } from "../../components/userProvider";
 
-
+/**
+ * 投票登録コンポーネント
+ * @returns {JSX.Element} 投票登録のビュー
+ */
 const VoteRegister = () => {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const { userData } = useContext(UserContext);
 
-
+    /**
+     * 初期値設定
+     */
     const initialValues = {
         voteQuestionId: null,
         userId: userData.userId,
@@ -20,6 +25,9 @@ const VoteRegister = () => {
         period: null,
     };
 
+    /**
+     * 初期回答リスト設定
+     */
     const initAnswerValueList = Array.from({ length: 2 }, () => ({
         voteAnswerId: null,
         voteQuestionId: null,
@@ -27,6 +35,11 @@ const VoteRegister = () => {
         answer: '',
     }));
 
+    /**
+     * フォーム送信処理
+     * @param {Object} formValues - フォームの値
+     * @param {Array} answerValueList - 回答のリスト
+     */
     const handleSubmit = async (formValues, answerValueList) => {
         setError(null);
 
@@ -57,8 +70,6 @@ const VoteRegister = () => {
         }
     };
 
-
-
     return (
         <Container maxWidth="sm" sx={{ minHeight: '100vh' }}>
         <Box mt={5}>
@@ -80,6 +91,6 @@ const VoteRegister = () => {
         </Box>
         </Container>
     );
-    };
+};
 
 export default VoteRegister;

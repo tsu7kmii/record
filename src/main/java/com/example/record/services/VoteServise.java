@@ -43,8 +43,8 @@ public class VoteServise {
 
     /**
      * 投票結果取得
-     * @param id
-     * @return
+     * @param id 投票質問のID
+     * @return 投票結果のリスト
      */
     public List<CountResponse> getCountList(int id){
 
@@ -68,8 +68,8 @@ public class VoteServise {
 
     /**
      * 投票を削除
-     * @param request
-     * @throws Exception
+     * @param request 投票削除のリクエスト情報
+     * @throws Exception 削除に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteCount(CountRequest request) throws Exception {
@@ -105,8 +105,8 @@ public class VoteServise {
 
     /**
      * 投票を追加
-     * @param request
-     * @throws Exception
+     * @param request 投票追加のリクエスト情報
+     * @throws Exception 追加に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void createCount(CountRequest request) throws Exception {
@@ -137,7 +137,8 @@ public class VoteServise {
 
     /**
      * 回答リスト取得
-     * @return
+     * @param id 質問ID
+     * @return 回答のリスト
      */
     public List<AnswerResponse> getAnswerList(int id){
 
@@ -165,8 +166,8 @@ public class VoteServise {
 
     /**
      * 回答内容更新(削除含む)
-     * @param lRequests
-     * @throws Exception
+     * @param lRequests 更新する回答のリスト
+     * @throws Exception 更新に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateAnster(List<AnswerRequest> lRequests) throws Exception{
@@ -226,8 +227,8 @@ public class VoteServise {
 
     /**
      * 回答登録
-     * @param lRequests
-     * @throws Exception
+     * @param lRequests 登録する回答のリスト
+     * @throws Exception 登録に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void createAnster(List<AnswerRequest> lRequests) throws Exception{
@@ -254,7 +255,7 @@ public class VoteServise {
 
     /**
      * 期限が修了したものを削除にする
-     * @throws Exception
+     * @throws Exception 削除に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void validatePeriod() throws Exception{
@@ -277,7 +278,7 @@ public class VoteServise {
 
     /**
      * 質問リスト取得
-     * @return
+     * @return 質問のリスト
      */
     public List<QuestionResponse> getQuestionList(){
 
@@ -306,8 +307,8 @@ public class VoteServise {
 
     /**
      * 質問削除
-     * @param request
-     * @throws Exception
+     * @param request 質問削除のリクエスト情報
+     * @throws Exception 削除に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteQuestion(QuestionRequest request) throws Exception{
@@ -334,8 +335,9 @@ public class VoteServise {
 
     /**
      * 質問内容更新
-     * @param request
-     * @throws Exception
+     * @param request 質問更新のリクエスト情報
+     * @throws Exception 更新に失敗した場合の例外
+     * @return 更新された質問のID
      */
     @Transactional(rollbackFor = Exception.class)
     public int updateQuestion(QuestionRequest request) throws Exception{
@@ -364,8 +366,9 @@ public class VoteServise {
 
     /**
      * 質問追加
-     * @param request
-     * @throws Exception
+     * @param request 質問追加のリクエスト情報
+     * @throws Exception 追加に失敗した場合の例外
+     * @return 追加された質問のID
      */
     @Transactional(rollbackFor = Exception.class)
     public int createQuestion(QuestionRequest request) throws Exception{

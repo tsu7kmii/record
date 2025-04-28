@@ -2,8 +2,19 @@ import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 
-
-
+/**
+ * ProgressTableコンポーネント
+ * 
+ * 進捗状況を表示するためのテーブルを提供します。
+ * 親要素と子要素のデータを受け取り、それに基づいてテーブルをレンダリングします。
+ * 
+ * @param {Object} props - コンポーネントのプロパティ
+ * @param {number} props.index - テーブルのインデックス
+ * @param {Object} props.parentValue - 親要素のデータ
+ * @param {Array} props.childValue - 子要素のデータ配列
+ * @param {Array} props.userList - ユーザーリスト
+ * @returns {JSX.Element} 進捗テーブルコンポーネント
+ */
 const ProgressTable = ({index, parentValue, childValue, userList}) => {
 
     const navigate = useNavigate();
@@ -20,17 +31,31 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
         { label : "完了", value : 5 },
     ];
 
+    /**
+     * 編集画面に遷移するためのハンドラー
+     * 
+     * @param {Object} element - 編集対象の要素
+     */
     const handleEditSubmit = async (element) => {
-    
         navigate('/progress/edit',{state: {progress: element}});
     };
 
+    /**
+     * 新規登録画面に遷移するためのハンドラー
+     * 
+     * @param {number} parentId - 親要素のID
+     */
     const handleNewSubmit = async (parentId) => {
-    
         navigate('/progress/register',{state: {parentId: parentId}});
     };
 
-
+    /**
+     * テーブルの行をレンダリングする関数
+     * 
+     * @param {Object} item - 行に表示するデータ
+     * @param {boolean} isChild - 子要素かどうかを示すフラグ
+     * @returns {JSX.Element} テーブル行
+     */
     const renderRow = (item, isChild = false) => (
         <TableRow
             key={item.managementId}
@@ -55,21 +80,20 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                 {new Date(item.completionScheduleAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
             </TableCell>
             <TableCell align="center">
-
-                    {parent.deleteAt === null && item.deleteAt === null &&
-                        <Button variant="outlined" type="submit" onClick={() => handleEditSubmit(item)}>
-                            Edit
-                        </Button>
-                    }
-                    {parent.deleteAt === null && item.deleteAt !== null &&
-                        '完了済'
-                    }
-                    {parent.deleteAt !== null && item.deleteAt !== null &&
-                        new Date(item.deleteAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
-                    }
-                    {parent.deleteAt !== null && item.deleteAt === null &&
-                        '未完了'
-                    }
+                {parent.deleteAt === null && item.deleteAt === null &&
+                    <Button variant="outlined" type="submit" onClick={() => handleEditSubmit(item)}>
+                        Edit
+                    </Button>
+                }
+                {parent.deleteAt === null && item.deleteAt !== null &&
+                    '完了済'
+                }
+                {parent.deleteAt !== null && item.deleteAt !== null &&
+                    new Date(item.deleteAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+                }
+                {parent.deleteAt !== null && item.deleteAt === null &&
+                    '未完了'
+                }
             </TableCell>
         </TableRow>
     );
@@ -95,8 +119,6 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
                         {parent.deleteAt === null && '操作' }
                         {parent.deleteAt !== null && '完了日' }
                     </TableCell>
-
-
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -119,8 +141,6 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
             <br />
             </>
         }
-
-
         </>
   );
 };

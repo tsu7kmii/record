@@ -31,10 +31,9 @@ public class ProgressService {
 
 
     /**
-     * 更新
-     * @param request
-     * @return
-     * @throws Exception
+     * 進捗を更新 
+     * @param request 進捗更新のリクエスト情報
+     * @throws Exception 更新に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateProgress(ProgressRequest request) throws Exception{
@@ -70,10 +69,9 @@ public class ProgressService {
 
 
     /**
-     * 追加
-     * @param request
-     * @return
-     * @throws Exception
+     * 新しい進捗を登録 
+     * @param request 進捗登録のリクエスト情報
+     * @throws Exception 登録に失敗した場合の例外
      */
     @Transactional(rollbackFor = Exception.class)
     public void newProgressRegister(ProgressRequest request) throws Exception{
@@ -106,8 +104,8 @@ public class ProgressService {
     }
 
     /**
-     * 未完了の親属性レコードリスト取得
-     * @return
+     * 未完了の親属性レコードリストを取得 
+     * @return 未完了の親属性レコードのリスト
      */
     public List<ProgressManagement> getIncomplateProgressParent(){
 
@@ -117,8 +115,8 @@ public class ProgressService {
     }
 
     /**
-     * 完了済みの親属性レコードリスト取得
-     * @return
+     * 完了済みの親属性レコードリストを取得 
+     * @return 完了済みの親属性レコードのリスト
      */
     public List<ProgressManagement> getComplateProgressParent(){
 
@@ -128,8 +126,8 @@ public class ProgressService {
     }
 
     /**
-     * 子属性レコードリスト取得
-     * @return
+     * 子属性レコードリストを取得 
+     * @return 子属性レコードのリスト
      */
     public List<ProgressManagement> getProgressChild(){
 

@@ -19,18 +19,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
 @RestController
 @RequestMapping("/api/progress")
 public class ProgressController {
     
-
     @Autowired
     ProgressService progressService;
 
-
+    /**
+     * 進捗を更新
+     * @param progressRequest 進捗更新リクエスト
+     * @param bindingResult バインディング結果
+     * @return 成功時は空のレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
     @PutMapping("/update")
     public ResponseEntity<Void> updateProgress(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {
         
@@ -43,10 +45,9 @@ public class ProgressController {
         return ResponseEntity.ok().build();
     }
 
-
     /**
      * 未完了の親属性レコードリスト取得
-     * @return
+     * @return 未完了の親属性レコードのリスト
      */
     @GetMapping("/parent/incomplete")
     public ResponseEntity<List<ProgressManagement>> getIncomplateParentList() {
@@ -57,8 +58,8 @@ public class ProgressController {
     }
 
     /**
-     * 未完了の親属性レコードリスト取得
-     * @return
+     * 完了した親属性レコードリスト取得
+     * @return 完了した親属性レコードのリスト
      */
     @GetMapping("/parent/complete")
     public ResponseEntity<List<ProgressManagement>> getComplateParentList() {
@@ -70,7 +71,7 @@ public class ProgressController {
 
     /**
      * 未完了の子属性レコードリスト取得
-     * @return
+     * @return 未完了の子属性レコードのリスト
      */
     @GetMapping("/child")
     public ResponseEntity<List<ProgressManagement>> getChildList() {
@@ -80,13 +81,12 @@ public class ProgressController {
         return new ResponseEntity<>(progressList, HttpStatus.OK);
     }
     
-
     /**
      * 新規登録
-     * @param progressRequest
-     * @param bindingResult
-     * @return
-     * @throws Exception
+     * @param progressRequest 新規登録リクエスト
+     * @param bindingResult バインディング結果
+     * @return 成功時は空のレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
      */
     @PostMapping("/register")
     public ResponseEntity<Void> postProgressRegister(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {

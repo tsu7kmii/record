@@ -3,12 +3,19 @@ import { getAuth } from '../api/userApi';
 import { handleApiError } from '../api/errorHandler';
 import { UserContext } from "./userProvider";
 
-
+/**
+ * GenAuthコンポーネント
+ * ユーザーの認証情報を取得し、コンテキストに設定します。
+ */
 const GenAuth = () => {
 
     const [error, setError] = useState(null);
     const { setUserData } = useContext(UserContext);
 
+    /**
+     * 認証情報を取得する非同期関数
+     * 成功時にはユーザーデータを設定し、失敗時にはエラーメッセージを設定します。
+     */
     const fetchAuth = async () => {
         setError(null);
 

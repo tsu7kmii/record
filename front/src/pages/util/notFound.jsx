@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Container, Typography, Box } from '@mui/material';
 
-
-
+/**
+ * NotFoundコンポーネント
+ * 
+ * このコンポーネントは、404エラーページを表示します。
+ * ユーザーが存在しないページにアクセスした際に表示され、
+ * トップページに戻るためのリンクを提供します。
+ */
 const NotFound = () => {
 
     return (

@@ -64,7 +64,7 @@ public class SecurityConfig {
                         // 認証が必要なパスを先に設定
                         .requestMatchers("/admin/**", "/api/user/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/user/private/**", "/api/user/admin/**", "/api/progress/**", "/api/vote/**").authenticated()
-                        .requestMatchers("/", "/signin", "/success" ,"/user/**", "/api/**", "/index.html", "/static/**").permitAll()
+                        .requestMatchers("/", "/signin", "/success", "error/**" ,"/user/**", "/api/**", "/index.html", "/static/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception
                         // 認証エラー時のレスポンスをカスタム

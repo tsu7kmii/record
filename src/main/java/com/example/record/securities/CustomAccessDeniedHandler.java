@@ -24,6 +24,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler{
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{\"message\": \"アクセス権限がありません\"}");
+
+        // リダイレクト先のURLを指定
+        String redirectUrl = "/error/access-denied";
+
+        response.sendRedirect(redirectUrl);
     }
     
 }

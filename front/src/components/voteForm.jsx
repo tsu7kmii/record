@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, InputAdornment } from '@mui/material';
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers-pro";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { ja } from 'date-fns/locale';
@@ -189,15 +189,20 @@ const VoteForm = ({initialValues,  initAnswerValueList, onSubmit}) => {
                         onChange={handleAnswerChange(index + 2)}
                         autoComplete="off"
                         multiline
+                        required
                         rows={2}
-                        InputProps={{
-                            endAdornment: (
-                                <MdDeleteOutline
-                                    style={{ cursor: 'pointer' }}
-                                    size={24}
-                                    onClick={() => handleDeleteAnswer(index + 2)}
-                                />
-                            )
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                    <MdDeleteOutline
+                                        style={{ cursor: 'pointer' }}
+                                        size={24}
+                                        onClick={() => handleDeleteAnswer(index + 2)}
+                                    />
+                                    </InputAdornment>
+                                )
+                            }
                         }}
                     />
                     <br /><br />

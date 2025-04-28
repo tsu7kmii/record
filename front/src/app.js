@@ -51,6 +51,10 @@ function App() {
         <Route path='/vote/register' element={<ProtectedLoginRoute><VoteRegister /></ProtectedLoginRoute>}/>
         <Route path='/vote/edit' element={<ProtectedLoginRoute><VoteEdit /></ProtectedLoginRoute>}/>
 
+        {/* error */}
+        <Route path="/error/access-denied" element={<AccessDenied />} />
+        <Route path="/error/not-found" element={<NotFound />} />
+
         <Route path="*" element={<NotFound />} />
 
       </Routes>

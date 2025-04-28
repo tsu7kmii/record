@@ -4,6 +4,14 @@ import { TextField, Button, Container, Typography, Box, Alert } from '@mui/mater
 import { registerUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 
+/**
+ * UserRegisterコンポーネント
+ * 
+ * 新規ユーザーがアカウントを作成するためのフォームを提供します。
+ * アカウント作成が成功した場合、成功ページにリダイレクトされます。
+ * 
+ * @returns {JSX.Element} ユーザー登録フォームを含むコンテナ
+ */
 const UserRegister = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -11,6 +19,11 @@ const UserRegister = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
+  /**
+   * フォーム送信時のハンドラー
+   * 
+   * @param {Event} e - フォーム送信イベント
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

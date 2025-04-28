@@ -17,10 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.record.dto.AuthResponse;
-import com.example.record.dto.SignupRequest;
-import com.example.record.dto.UpdatePasswordRequest;
-import com.example.record.dto.UserListResponse;
+import com.example.record.dto.user.AuthResponse;
+import com.example.record.dto.user.SignupRequest;
+import com.example.record.dto.user.UpdatePasswordRequest;
+import com.example.record.dto.user.UserListResponse;
 import com.example.record.exception.ErrorMessages;
 import com.example.record.models.dao.PasswordTokenRepository;
 import com.example.record.models.dao.UserAccountRepository;
@@ -44,6 +44,22 @@ public class UserService {
     public static final int PERMISSION_LEVEL_ADMIN = 1;
 
     public static final int PERMISSION_LEVEL_USER = 2;
+
+
+    /**
+     * 検索されたアカウントが存在するかチェックする
+     * @param userId
+     * @return true
+     * @throws Exception
+     */
+    public boolean isUserNotDeleted(int userId) throws Exception {
+
+        if (!userRepo.existsByUserIdAndDeleteAtIsNull(userId)){
+            throw new Exception(ErrorMessages.UserErros.AUTH_ERROR);
+        }
+
+        return true;
+    }
 
 
     /**
@@ -303,7 +319,6 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception(ErrorMessages.GlobalErrors.SQL_ERROR); 
         }
-        passwordRepo.save(myToken);
 
         String url = conTextPath + "/user/password?token=" + token;
 

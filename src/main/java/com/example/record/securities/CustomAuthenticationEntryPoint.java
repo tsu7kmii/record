@@ -24,6 +24,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint{
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{\"message\": \"認証情報がありません\"}");
+
+        // リダイレクト先のURLを指定
+        String redirectUrl = "/signin";
+
+        response.sendRedirect(redirectUrl);
         
     }
     

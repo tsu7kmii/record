@@ -1,4 +1,4 @@
-package com.example.record.dto;
+package com.example.record.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

@@ -9,6 +9,15 @@ import com.example.record.models.entities.UserAccount;
 
 public interface UserAccountRepository extends JpaRepository<UserAccount, Integer> {
 
+
+    /**
+     * 検索されたアカウントが存在するかチェック
+     * @param userId
+     * @return
+     */
+    boolean existsByUserIdAndDeleteAtIsNull(int userId);
+
+
     /**
      * ユーザーIDでユーザーアカウントを検索
      * @param userId ユーザーID

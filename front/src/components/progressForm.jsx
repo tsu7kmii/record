@@ -8,7 +8,18 @@ import { getMenuItemUserList } from '../api/userApi';
 import { handleApiError } from '../api/errorHandler';
 import { UserContext } from "./userProvider";
 
-
+/**
+ * ProgressFormコンポーネント
+ * 
+ * 進捗を管理するためのフォームを提供します。
+ * 初期値、送信時の処理、ステータスボックスを受け取ります。
+ * 
+ * @param {Object} props - コンポーネントのプロパティ
+ * @param {Object} props.initialValues - フォームの初期値
+ * @param {Function} props.onSubmit - フォーム送信時のコールバック関数
+ * @param {Array} props.statusBox - ステータス選択肢の配列
+ * @returns {JSX.Element} 進捗フォームコンポーネント
+ */
 const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
 
     // const initlValues = {
@@ -42,6 +53,12 @@ const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
     //     { label : "完了", value : 5 },
     // ];
 
+    /**
+     * フォームのフィールド変更時のハンドラー
+     * 
+     * @param {string} field - 変更するフィールド名
+     * @returns {Function} イベントハンドラー
+     */
     const handleChange = (field) => (event) => {
         setFormValues({
         ...formValues,
@@ -49,6 +66,11 @@ const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
         });
     };
 
+    /**
+     * 日付変更時のハンドラー
+     * 
+     * @param {Date} newDate - 新しい日付
+     */
     const handleDateChange = (newDate) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -56,11 +78,19 @@ const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
         }));
     };
 
+    /**
+     * フォーム送信時のハンドラー
+     * 
+     * @param {Event} e - フォーム送信イベント
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         onSubmit(formValues);
     };
 
+    /**
+     * ユーザーリストを取得する非同期関数
+     */
     const fetchMenuItemUserList = async () => {
         setError(null);
         
@@ -154,12 +184,12 @@ const ProgressForm = ({initialValues, onSubmit, statusBox}) => {
                             onChange={handleChange('userId')}
                             autoComplete="off"
                             MenuProps={{
-                            PaperProps: {
-                                style: {
-                                maxHeight: 150,
-                                overflowY: 'auto',
+                                PaperProps: {
+                                    style: {
+                                        maxHeight: 150,
+                                        overflowY: 'auto',
+                                    },
                                 },
-                            },
                             }}
                         >
                             {userMenuItem.map((item, index) => (

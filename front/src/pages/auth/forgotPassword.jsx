@@ -4,11 +4,23 @@ import { TextField, Button, Container, Typography, Box, Alert } from '@mui/mater
 import { sendPasswordUpdateEmail } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 
+/**
+ * ForgetPasswordコンポーネント
+ * 
+ * ユーザーがパスワードをリセットするためのメールを送信するためのフォームを提供します。
+ * 
+ * @returns {JSX.Element} ForgetPasswordコンポーネント
+ */
 const ForgetPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
 
+  /**
+   * フォーム送信時のハンドラー
+   * 
+   * @param {Event} e - フォーム送信イベント
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

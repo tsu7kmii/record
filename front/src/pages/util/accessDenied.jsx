@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Container, Typography, Box } from '@mui/material';
 
-
-
+/**
+ * AccessDeniedコンポーネント
+ * ユーザーがアクセス権限のないページにアクセスした際に表示されるメッセージを提供します。
+ * トップページに戻るためのリンクを含んでいます。
+ */
 const AccessDenied = () => {
 
     return (

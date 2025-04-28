@@ -5,6 +5,14 @@ import { updatePassword, logoutUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 import { UserContext } from '../../components/userProvider';
 
+/**
+ * UpdatePasswordコンポーネント
+ * 
+ * ユーザーがパスワードを変更するためのフォームを提供します。
+ * パスワードの変更が成功した場合、ユーザーはログアウトされ、成功ページにリダイレクトされます。
+ * 
+ * @returns {JSX.Element} パスワード変更フォームを含むコンテナ
+ */
 const UpdatePassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [againNewPassword, setAgainNewPassword] = useState('');
@@ -12,12 +20,20 @@ const UpdatePassword = () => {
   const [error, setError] = useState(null);
   const { setUserData } = useContext(UserContext);
 
+  /**
+   * コンポーネントのマウント時にトークンをURLから取得します。
+   */
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const tokenValue = queryParams.get('token');
     setToken(tokenValue);
   }, []);
 
+  /**
+   * フォーム送信時のハンドラー
+   * 
+   * @param {Event} e - フォーム送信イベント
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

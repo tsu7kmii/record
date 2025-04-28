@@ -1,14 +1,12 @@
 import axios, { initializeCsrfProtection } from './axiosConfig';
 
-const baseURL = 'http://localhost:8080'; // debug
-
+const baseEndPoint = process.env.REACT_APP_API_BASE_ENDPOINT; 
 export const sendJsonData = async (url, data, method) => {
     try {
         await initializeCsrfProtection();
         const response = await axios({
             method,
-            // url
-            url: baseURL + url, // debug
+            url: baseEndPoint + url, 
             data: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json',
@@ -39,8 +37,7 @@ export const sendFormData = async (url, data, method = 'post') => {
         });
         const response = await axios({
             method,
-            // url,
-            url: baseURL + url, // debug
+            url: baseEndPoint + url,
             data: params,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

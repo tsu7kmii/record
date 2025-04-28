@@ -6,7 +6,10 @@ import { getuserIdUsernameList } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 import ProgressTable from '../../components/progressTable';
 
-
+/**
+ * ProgressViewコンポーネント
+ * 進捗の一覧を表示し、新しい進捗の登録を行うためのビューを提供する。
+ */
 const ProgressView = () => {
     const navigate = useNavigate();
     const [incomplateParent, setIncomplateParent] = useState([]);
@@ -15,52 +18,63 @@ const ProgressView = () => {
     const [userIdUsername, setUserIdUsername] = useState([]);
     const [error, setError] = useState(null);
 
-
+    /**
+     * 未完了の親タスクを取得する非同期関数
+     */
     const fetchIncomplateParent = async () => {
         setError(null);
 
         try {
-        const response = await getIncomplateParentList();
-        if (response.status === 200) {
-            setIncomplateParent(response.data);
-        } else {
-            setError(`取得に失敗しました: ${response.data.message}`);
-        }
+            const response = await getIncomplateParentList();
+            if (response.status === 200) {
+                setIncomplateParent(response.data);
+            } else {
+                setError(`取得に失敗しました: ${response.data.message}`);
+            }
         } catch (error) {
-        setError(handleApiError(error));
+            setError(handleApiError(error));
         }
     };
 
+    /**
+     * 完了済の親タスクを取得する非同期関数
+     */
     const fetchComplateParent = async () => {
         setError(null);
 
         try {
-        const response = await getComplateParentList();
-        if (response.status === 200) {
-            setComplateParent(response.data);
-        } else {
-            setError(`取得に失敗しました: ${response.data.message}`);
-        }
+            const response = await getComplateParentList();
+            if (response.status === 200) {
+                setComplateParent(response.data);
+            } else {
+                setError(`取得に失敗しました: ${response.data.message}`);
+            }
         } catch (error) {
-        setError(handleApiError(error));
+            setError(handleApiError(error));
         }
     };
 
+    /**
+     * 子タスクを取得する非同期関数
+     */
     const fetchChild = async () => {
         setError(null);
 
         try {
-        const response = await getChildList();
-        if (response.status === 200) {
-            setChild(response.data);
-        } else {
-            setError(`取得に失敗しました: ${response.data.message}`);
-        }
+            const response = await getChildList();
+            if (response.status === 200) {
+                setChild(response.data);
+            } else {
+                setError(`取得に失敗しました: ${response.data.message}`);
+            }
         } catch (error) {
-        setError(handleApiError(error));
+            setError(handleApiError(error));
         }
     };
 
+    /**
+     * ユーザーIDとユーザー名のリストを取得する非同期関数
+     */
     const fetchMenuItemUserList = async () => {
         setError(null);
         
@@ -76,15 +90,16 @@ const ProgressView = () => {
         }
     };
 
+    /**
+     * 新しい進捗を登録するためのナビゲーションを行う関数
+     */
     const handleNewSubmit = async () => {
         setError(null);
         
-        navigate('/progress/register')
+        navigate('/progress/register');
     };
     
-
     useEffect(() => {
-
         // ユーザー一覧の取得
         fetchMenuItemUserList();
         fetchIncomplateParent();
@@ -98,7 +113,6 @@ const ProgressView = () => {
         }
     }, [error]);
 
-
     return (
         <Container sx={{ minHeight: '100vh', width: '100%' }}>
         <Box mt={5}>
@@ -108,7 +122,7 @@ const ProgressView = () => {
                     進捗一覧
                 </Typography>
 
-                <Button variant="outlined" type="submit" size="large"  onClick={() => handleNewSubmit(parent.managementId)}>
+                <Button variant="outlined" type="submit" size="large"  onClick={() => handleNewSubmit()}>
                     新しく登録
                 </Button>
             </Box>
@@ -143,6 +157,6 @@ const ProgressView = () => {
         </Box>
         </Container>
     );
-    };
+};
 
 export default ProgressView;

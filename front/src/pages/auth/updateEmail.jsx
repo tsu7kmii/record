@@ -5,12 +5,24 @@ import { updateEmail, logoutUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 import { UserContext } from "../../components/userProvider";
 
+/**
+ * UpdateEmailコンポーネント
+ * 
+ * ユーザーがメールアドレスを変更するためのフォームを提供します。
+ * メールアドレスの変更が成功した場合、ユーザーはログアウトされ、成功ページにリダイレクトされます。
+ * 
+ * @returns {JSX.Element} メールアドレス変更フォームを含むコンテナ
+ */
 const UpdateEmail = () => {
   const [newEmail, setNewEmail] = useState('');
   const [error, setError] = useState(null);
   const { setUserData } = useContext(UserContext);
 
-
+  /**
+   * フォーム送信時のハンドラー
+   * 
+   * @param {Event} e - フォーム送信イベント
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

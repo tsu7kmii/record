@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: mysql
--- 生成日時: 2025 年 4 月 20 日 15:05
+-- 生成日時: 2025 年 4 月 24 日 19:47
 -- サーバのバージョン： 8.4.2
 -- PHP のバージョン: 8.2.8
 
@@ -31,7 +31,7 @@ CREATE TABLE `chat_contents` (
   `chat_contents_id` int NOT NULL,
   `chat_room_id` int NOT NULL,
   `user_id` int NOT NULL,
-  `contents` text COLLATE utf8mb4_general_ci NOT NULL,
+  `contents` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL,
   `delete_at` datetime DEFAULT NULL
@@ -45,31 +45,10 @@ CREATE TABLE `chat_contents` (
 
 CREATE TABLE `chat_room` (
   `chat_room_id` int NOT NULL,
-  `title` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime NOT NULL,
   `delete_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `progress_management`
---
-
-CREATE TABLE `progress_management` (
-  `management_id` int NOT NULL,
-  `parent_id` int DEFAULT NULL,
-  `chat_room_id` int DEFAULT NULL,
-  `user_id` int NOT NULL,
-  `title` varchar(400) COLLATE utf8mb4_general_ci NOT NULL,
-  `contents` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '科目',
-  `link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` int NOT NULL COMMENT '取り組み中など',
-  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_at` datetime DEFAULT NULL,
-  `delete_at` datetime DEFAULT NULL COMMENT '兼完了日',
-  `completion_schedule_at` datetime NOT NULL COMMENT '完了予定日'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -106,6 +85,27 @@ INSERT INTO `password_reset_token_seq` (`id`, `next_val`) VALUES
 -- --------------------------------------------------------
 
 --
+-- テーブルの構造 `progress_management`
+--
+
+CREATE TABLE `progress_management` (
+  `management_id` int NOT NULL,
+  `parent_id` int DEFAULT NULL,
+  `chat_room_id` int DEFAULT NULL,
+  `user_id` int NOT NULL,
+  `title` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `contents` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '科目',
+  `link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `status` int NOT NULL COMMENT '取り組み中など',
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_at` datetime DEFAULT NULL,
+  `delete_at` datetime DEFAULT NULL COMMENT '兼完了日',
+  `completion_schedule_at` datetime NOT NULL COMMENT '完了予定日'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- テーブルの構造 `user_account`
 --
 
@@ -120,7 +120,6 @@ CREATE TABLE `user_account` (
   `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
 -- --------------------------------------------------------
 
 --
@@ -130,7 +129,24 @@ CREATE TABLE `user_account` (
 CREATE TABLE `vote_answer` (
   `vote_answer_id` int NOT NULL,
   `vote_question_id` int NOT NULL,
-  `answer` varchar(500) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_id` int NOT NULL,
+  `answer` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_at` datetime DEFAULT NULL,
+  `delete_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- テーブルの構造 `vote_count`
+--
+
+CREATE TABLE `vote_count` (
+  `vote_count_id` int NOT NULL,
+  `vote_question_id` int NOT NULL,
+  `vote_answer_id` int NOT NULL,
+  `user_id` int NOT NULL,
   `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL,
   `delete_at` datetime DEFAULT NULL
@@ -145,7 +161,8 @@ CREATE TABLE `vote_answer` (
 CREATE TABLE `vote_question` (
   `vote_question_id` int NOT NULL,
   `chat_room_id` int DEFAULT NULL,
-  `title` varchar(400) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_id` int NOT NULL,
+  `title` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `period` datetime NOT NULL COMMENT 'いつまで',
   `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL,
@@ -169,12 +186,6 @@ ALTER TABLE `chat_room`
   ADD PRIMARY KEY (`chat_room_id`);
 
 --
--- テーブルのインデックス `progress_management`
---
-ALTER TABLE `progress_management`
-  ADD PRIMARY KEY (`management_id`);
-
---
 -- テーブルのインデックス `password_reset_token`
 --
 ALTER TABLE `password_reset_token`
@@ -185,6 +196,12 @@ ALTER TABLE `password_reset_token`
 --
 ALTER TABLE `password_reset_token_seq`
   ADD PRIMARY KEY (`id`);
+
+--
+-- テーブルのインデックス `progress_management`
+--
+ALTER TABLE `progress_management`
+  ADD PRIMARY KEY (`management_id`);
 
 --
 -- テーブルのインデックス `user_account`
@@ -198,6 +215,12 @@ ALTER TABLE `user_account`
 --
 ALTER TABLE `vote_answer`
   ADD PRIMARY KEY (`vote_answer_id`);
+
+--
+-- テーブルのインデックス `vote_count`
+--
+ALTER TABLE `vote_count`
+  ADD PRIMARY KEY (`vote_count_id`);
 
 --
 -- テーブルのインデックス `vote_question`
@@ -222,13 +245,13 @@ ALTER TABLE `chat_room`
   MODIFY `chat_room_id` int NOT NULL AUTO_INCREMENT;
 
 --
--- テーブルの AUTO_INCREMENT `progress_management`
+-- テーブルの AUTO_INCREMENT `password_reset_token_seq`
 --
 ALTER TABLE `progress_management`
   MODIFY `management_id` int NOT NULL AUTO_INCREMENT;
 
 --
--- テーブルの AUTO_INCREMENT `password_reset_token_seq`
+-- テーブルの AUTO_INCREMENT `progress_management`
 --
 ALTER TABLE `password_reset_token_seq`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
@@ -244,6 +267,12 @@ ALTER TABLE `user_account`
 --
 ALTER TABLE `vote_answer`
   MODIFY `vote_answer_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- テーブルの AUTO_INCREMENT `vote_count`
+--
+ALTER TABLE `vote_count`
+  MODIFY `vote_count_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- テーブルの AUTO_INCREMENT `vote_question`

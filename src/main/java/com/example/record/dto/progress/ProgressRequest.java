@@ -1,4 +1,4 @@
-package com.example.record.dto;
+package com.example.record.dto.progress;
 
 import java.util.Date;
 

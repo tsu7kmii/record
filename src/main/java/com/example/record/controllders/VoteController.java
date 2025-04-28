@@ -1,0 +1,243 @@
+package com.example.record.controllders;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.record.dto.vote.AnswerRequest;
+import com.example.record.dto.vote.AnswerResponse;
+import com.example.record.dto.vote.CountRequest;
+import com.example.record.dto.vote.CountResponse;
+import com.example.record.dto.vote.QuestionIdRequest;
+import com.example.record.dto.vote.QuestionRequest;
+import com.example.record.dto.vote.QuestionResponse;
+import com.example.record.exception.ErrorMessages;
+import com.example.record.services.UserService;
+import com.example.record.services.VoteServise;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@RestController
+@RequestMapping("/api/vote")
+public class VoteController {
+
+    @Autowired
+    VoteServise voteServise;
+
+    @Autowired
+    UserService userService;
+
+    /**
+     * 投票結果取得
+     * 
+     * @param questionidRequest 質問IDリクエスト
+     * @param bindingResult     バインディング結果
+     * @return 投票結果のリスト
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PostMapping("/question/count")
+    public ResponseEntity<List<CountResponse>> getCountList(@Validated @RequestBody QuestionIdRequest questionidRequest, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        List<CountResponse> countList = voteServise.getCountList(questionidRequest.getVoteQuestionId());
+
+        return new ResponseEntity<>(countList, HttpStatus.OK);
+    }
+
+    /**
+     * 投票を削除
+     * 
+     * @param countRequest  投票削除リクエスト
+     * @param bindingResult バインディング結果
+     * @return 成功時は空のレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @DeleteMapping("count")
+    public ResponseEntity<Void> deleteCount(@Validated @RequestBody CountRequest countRequest, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        userService.isUserNotDeleted(countRequest.getUserId());
+
+        voteServise.deleteCount(countRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 投票を追加
+     * 
+     * @param countRequest  投票追加リクエスト
+     * @param bindingResult バインディング結果
+     * @return 成功時は空のレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PostMapping("/count")
+    public ResponseEntity<Void> createCount(@Validated @RequestBody CountRequest countRequest, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        userService.isUserNotDeleted(countRequest.getUserId());
+
+        voteServise.createCount(countRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 質問別回答一覧取得
+     * 
+     * @param questionidRequest 質問IDリクエスト
+     * @param bindingResult     バインディング結果
+     * @return 回答のリスト
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PostMapping("/question/answer")
+    public ResponseEntity<List<AnswerResponse>> getAnswerList(@Validated @RequestBody QuestionIdRequest questionidRequest, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        List<AnswerResponse> answerList = voteServise.getAnswerList(questionidRequest.getVoteQuestionId());
+
+        return new ResponseEntity<>(answerList, HttpStatus.OK);
+    }
+
+    /**
+     * 質問追加時の回答変更
+     * 
+     * @param lAnswerRequests 回答変更リクエストのリスト
+     * @param bindingResult   バインディング結果
+     * @return 成功時は空のレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PutMapping("/answer")
+    public ResponseEntity<Void> updateAnswer(@Validated @RequestBody List<AnswerRequest> lAnswerRequests, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        for (AnswerRequest request : lAnswerRequests) {
+            userService.isUserNotDeleted(request.getUserId());
+        }
+
+        voteServise.updateAnster(lAnswerRequests);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 質問追加時の回答追加
+     * 
+     * @param lAnswerRequests 回答追加リクエストのリスト
+     * @param bindingResult   バインディング結果
+     * @return 成功時は空のレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PostMapping("/answer")
+    public ResponseEntity<Void> createAnswer(@Validated @RequestBody List<AnswerRequest> lAnswerRequests, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        for (AnswerRequest request : lAnswerRequests) {
+            userService.isUserNotDeleted(request.getUserId());
+        }
+
+        voteServise.createAnster(lAnswerRequests);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 質問一覧取得
+     * 
+     * @return 質問のリスト
+     * @throws Exception 期間バリデーションエラーまたはその他の例外
+     */
+    @GetMapping("/question")
+    public ResponseEntity<List<QuestionResponse>> getQuestionList() throws Exception {
+
+        voteServise.validatePeriod();
+
+        List<QuestionResponse> questionList = voteServise.getQuestionList();
+
+        return new ResponseEntity<>(questionList, HttpStatus.OK);
+    }
+
+    /**
+     * 質問削除
+     * 
+     * @param questionRequest 質問削除リクエスト
+     * @return 成功時は空のレスポンス
+     * @throws Exception その他の例外
+     */
+    @DeleteMapping("/question")
+    public ResponseEntity<Void> deleteQuestion(@RequestBody QuestionRequest questionRequest) throws Exception {
+
+        voteServise.deleteQuestion(questionRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 質問更新
+     * 
+     * @param questionRequest 質問更新リクエスト
+     * @param bindingResult   バインディング結果
+     * @return 更新された質問IDを含むレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PutMapping("/question")
+    public ResponseEntity<Object> updateQuestion(@Validated @RequestBody QuestionRequest questionRequest, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        int voteQuestionId = voteServise.updateQuestion(questionRequest);
+        return ResponseEntity.ok().body(Map.of("voteQuestionId", voteQuestionId));
+    }
+
+    /**
+     * 質問新規追加
+     * 
+     * @param questionRequest 質問追加リクエスト
+     * @param bindingResult   バインディング結果
+     * @return 追加された質問IDを含むレスポンス
+     * @throws Exception バリデーションエラーまたはその他の例外
+     */
+    @PostMapping("/question")
+    public ResponseEntity<Object> createQuestion(@Validated @RequestBody QuestionRequest questionRequest, BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception(ErrorMessages.VoteError.VALIDATE_FAIL);
+        }
+
+        userService.isUserNotDeleted(questionRequest.getUserId());
+
+        int voteQuestionId = voteServise.createQuestion(questionRequest);
+        return ResponseEntity.ok().body(Map.of("voteQuestionId", voteQuestionId));
+    }
+}

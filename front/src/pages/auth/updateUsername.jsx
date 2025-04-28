@@ -5,13 +5,24 @@ import { updateUsername, logoutUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 import { UserContext } from '../../components/userProvider';
 
-
+/**
+ * UpdateUsernameコンポーネント
+ * 
+ * ユーザーがユーザーネームを変更するためのフォームを提供します。
+ * ユーザーネームの変更が成功した場合、ユーザーはログアウトされ、成功ページにリダイレクトされます。
+ * 
+ * @returns {JSX.Element} ユーザーネーム変更フォームを含むコンテナ
+ */
 const UpdateUsername = () => {
   const [newUsername, setNewUsername] = useState('');
   const [error, setError] = useState(null);
   const { setUserData } = useContext(UserContext);
 
-
+  /**
+   * フォーム送信時のハンドラー
+   * 
+   * @param {Event} e - フォーム送信イベント
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

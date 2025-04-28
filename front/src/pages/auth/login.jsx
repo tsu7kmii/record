@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 import { Link } from "react-router-dom";
-import { loginUser} from '../../api/userApi';
+import { loginUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 
-
+/**
+ * Loginコンポーネント
+ * 
+ * ユーザーがログインするためのフォームを提供します。
+ * 
+ * @returns {JSX.Element} ログインフォームを含むコンテナ
+ */
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
+  /**
+   * フォーム送信時のハンドラー
+   * 
+   * @param {Event} e - フォーム送信イベント
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -22,9 +33,8 @@ const Login = () => {
         setError(`ログインに失敗しました: ${response.data.message}`);
       }
     } catch (error) {
-        setError(handleApiError(error));
+      setError(handleApiError(error));
     }
-      
   };
 
   return (

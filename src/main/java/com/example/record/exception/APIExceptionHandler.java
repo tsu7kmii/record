@@ -19,17 +19,18 @@ public class APIExceptionHandler {
     @ExceptionHandler(Exception.class)
     public void handleExeption(Exception ex, HttpServletResponse response) throws IOException {
 
-        if (ex.getMessage() != null && ex.getMessage().contains("No static resource")) {
-            // リダイレクト処理
-            response.sendRedirect("/error/not-found");
-            return;
-        }
+        // 同一ドメインでホストしない(resources/static/に配置しない)のでリダイレクトを無効化
+        // if (ex.getMessage() != null && ex.getMessage().contains("No static resource")) {
+        //     // リダイレクト処理
+        //     response.sendRedirect("/error/not-found");
+        //     return;
+        // }
 
-        if (ex.getMessage() != null && ex.getMessage().contains("Request method")) {
-            // リダイレクト処理
-            response.sendRedirect("/error/not-found");
-            return;
-        }
+        // if (ex.getMessage() != null && ex.getMessage().contains("Request method")) {
+        //     // リダイレクト処理
+        //     response.sendRedirect("/error/not-found");
+        //     return;
+        // }
 
         // 通常のエラーレスポンス
         response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());

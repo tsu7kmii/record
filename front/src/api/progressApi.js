@@ -3,7 +3,7 @@ import { sendJsonData } from './apiUtils';
 
 
 export const registerProgress = async (formData) => {
-    return sendJsonData('/api/progress/register', formData, 'post');
+    return sendJsonData('/api/progress', formData, 'post');
 };
 
 export const getIncomplateParentList = async () => {
@@ -19,5 +19,5 @@ export const getChildList = async () => {
 };
 
 export const updateProgress = async (formData) => {
-    return sendJsonData('/api/progress/update', formData, 'put');
+    return sendJsonData('/api/progress', formData, 'put');
 };

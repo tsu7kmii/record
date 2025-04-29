@@ -33,7 +33,7 @@ public class ProgressController {
      * @return 成功時は空のレスポンス
      * @throws Exception バリデーションエラーまたはその他の例外
      */
-    @PutMapping("/update")
+    @PutMapping("")
     public ResponseEntity<Void> updateProgress(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {
         
         if (bindingResult.hasErrors()) {
@@ -88,7 +88,7 @@ public class ProgressController {
      * @return 成功時は空のレスポンス
      * @throws Exception バリデーションエラーまたはその他の例外
      */
-    @PostMapping("/register")
+    @PostMapping("")
     public ResponseEntity<Void> postProgressRegister(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {
         
         if (bindingResult.hasErrors()) {

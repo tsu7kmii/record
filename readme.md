@@ -23,4 +23,31 @@ react project追加
 build/を/resources/staticに配置
 spring 起動
 `mvn spring-boot:run`
+
+
+
+
+## デプロイ関係
+spring
+`pom.xml`における`<packaging>`項目において`jar`であるか`war`であるかに留意する
+
+```
+mvn package
+```
+`/target`に作成される
+
+
+react
+`/front`階層にいることに留意する
+依存関係のインストール
+```
+npm install
+```
+
+ビルド
+```
+npm run build
+```
+
+`/build`に作成される
  -->

@@ -91,7 +91,7 @@ npm run build
 |/api/user/private/users/all||200:List<br>userId<br/>username|GET|json|全ユーザー一覧取得|
 
 ### progress
-|エンドポイント|リクエスト|レスポンス|メソッド|Content-Type|詳細|  
+|エンドポイント|リクエスト|レスポンス(json)|メソッド|Content-Type|詳細|  
 |---|---|---|---|---|---|
 |/api/progress|managementId<br/>(parentId)<br/>userId<br/>title<br/>contents<br/>(link)<br/>status<br/>completionScheduleAt|200|PUT|json|進捗を更新|
 |/api/progress/parent/incomplete||200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|未完了の親属性レコードリスト取得|
@@ -100,7 +100,7 @@ npm run build
 |/api/progress|(parentId)<br/>userId<br/>title<br/>contents<br/>(link)<br/>status<br/>completionScheduleAt|200|POST|json|新規登録|
 
 ### vote
-|エンドポイント|リクエスト|レスポンス|メソッド|Content-Type|詳細|  
+|エンドポイント|リクエスト|レスポンス(json)|メソッド|Content-Type|詳細|  
 |---|---|---|---|---|---|
 |/api/vote/question/count|voteQuestionId|200:List<br/>voteCountId<br/>voteQuestionId<br/>voteAnswerId<br/>userId<br/>username<br/>createAt|POST|json|投票結果取得|
 |/api/vote/count|voteCountId<br/>voteQuestionId<br/>voteAnswerId<br/>userId|200|DELETE|json|投票を削除|

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Alert, OutlinedInput, InputAdornment, IconButton, InputLabel, FormControl } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { updatePassword, logoutUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 import { UserContext } from '../../components/userProvider';
@@ -19,6 +20,28 @@ const UpdatePassword = () => {
   const [token, setToken] = useState('');
   const [error, setError] = useState(null);
   const { setUserData } = useContext(UserContext);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showAgainNewPassword, setShowAgainNewPassword] = useState(false);
+  
+  // パスワードを表示/非表示の切り替え
+  const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+  const handleClickShowAgainNewPassword = () => setShowAgainNewPassword((show) => !show);
+
+  // パスワードを表示/非表示の切り替え
+  const handleMouseDownNewPassword = (event) => {
+    event.preventDefault();
+  };
+  const handleMouseDownAgainNewPassword = (event) => {
+    event.preventDefault();
+  };
+
+  // パスワードを表示/非表示の切り替え
+  const handleMouseUpNewPassword = (event) => {
+    event.preventDefault();
+  };
+  const handleMouseUpAgainNewPassword = (event) => {
+    event.preventDefault();
+  };
 
   /**
    * コンポーネントのマウント時にトークンをURLから取得します。
@@ -73,28 +96,63 @@ const UpdatePassword = () => {
           </>
         )}
         <form onSubmit={handleSubmit}>
+          <p>パスワードには、半角英数字で6文字以上設定する必要があります</p>
           <div className="mb-3">
-            <TextField
-              fullWidth
-              label="パスワード"
-              variant="outlined"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
+            <FormControl variant="outlined" required fullWidth>
+              <InputLabel htmlFor="outlined-adornment-password">パスワード</InputLabel>
+              <OutlinedInput
+                id="filled-adornment-password"
+                type={showNewPassword ? 'text' : 'password'}
+                label="パスワード"
+                variant="outlined"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showNewPassword ? 'hide the password' : 'display the password'
+                      }
+                      onClick={handleClickShowNewPassword}
+                      onMouseDown={handleMouseDownNewPassword}
+                      onMouseUp={handleMouseUpNewPassword}
+                      edge="end"
+                    >
+                      {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
           </div>
           <br />
           <div className="mb-3">
-            <TextField
-              fullWidth
-              label="パスワード(確認)"
-              variant="outlined"
-              type="password"
-              value={againNewPassword}
-              onChange={(e) => setAgainNewPassword(e.target.value)}
-              required
-            />
+            <FormControl variant="outlined" required fullWidth>
+              <InputLabel htmlFor="outlined-adornment-password">パスワード(確認)</InputLabel>
+              <OutlinedInput
+                id="filled-adornment-password"
+                type={showAgainNewPassword ? 'text' : 'password'}
+                label="パスワード"
+                variant="outlined"
+                value={againNewPassword}
+                onChange={(e) => setAgainNewPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showAgainNewPassword ? 'hide the password' : 'display the password'
+                      }
+                      onClick={handleClickShowAgainNewPassword}
+                      onMouseDown={handleMouseDownAgainNewPassword}
+                      onMouseUp={handleMouseUpAgainNewPassword}
+                      edge="end"
+                    >
+                      {showAgainNewPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
           </div>
           <br />
           <Box display="flex" justifyContent="space-between" alignItems="center">

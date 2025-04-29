@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Alert, OutlinedInput, InputAdornment, IconButton, InputLabel, FormControl } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from "react-router-dom";
 import { loginUser } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
@@ -15,6 +16,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // パスワードを表示/非表示の切り替え
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  // パスワードを表示/非表示の切り替え
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  // パスワードを表示/非表示の切り替え
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
 
   /**
    * フォーム送信時のハンドラー
@@ -63,15 +78,32 @@ const Login = () => {
           </div>
           <br />
           <div className="mb-3">
-            <TextField
-              fullWidth
-              label="パスワード"
-              variant="outlined"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <FormControl variant="outlined" required fullWidth>
+              <InputLabel htmlFor="outlined-adornment-password">パスワード</InputLabel>
+              <OutlinedInput
+                id="filled-adornment-password"
+                type={showPassword ? 'text' : 'password'}
+                label="パスワード"
+                variant="outlined"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword ? 'hide the password' : 'display the password'
+                      }
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
           </div>
           <br />
           <Box display="flex" justifyContent="space-between" alignItems="center">

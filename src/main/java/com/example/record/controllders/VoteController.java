@@ -66,7 +66,7 @@ public class VoteController {
      * @return 成功時は空のレスポンス
      * @throws Exception バリデーションエラーまたはその他の例外
      */
-    @DeleteMapping("count")
+    @DeleteMapping("/count")
     public ResponseEntity<Void> deleteCount(@Validated @RequestBody CountRequest countRequest, BindingResult bindingResult) throws Exception {
 
         if (bindingResult.hasErrors()) {

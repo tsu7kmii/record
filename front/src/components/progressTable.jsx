@@ -12,10 +12,9 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
  * @param {number} props.index - テーブルのインデックス
  * @param {Object} props.parentValue - 親要素のデータ
  * @param {Array} props.childValue - 子要素のデータ配列
- * @param {Array} props.userList - ユーザーリスト
  * @returns {JSX.Element} 進捗テーブルコンポーネント
  */
-const ProgressTable = ({index, parentValue, childValue, userList}) => {
+const ProgressTable = ({index, parentValue, childValue}) => {
 
     const navigate = useNavigate();
     const [indexKey] = useState(index);
@@ -64,9 +63,7 @@ const ProgressTable = ({index, parentValue, childValue, userList}) => {
             <TableCell component="th" scope="row">
                 {new Date(item.createAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}
             </TableCell>
-            <TableCell align="center">
-                {userList.find(user => user.userId === item.userId)?.username || "不明なユーザー"}
-            </TableCell>
+            <TableCell align="center">{item.username}</TableCell>
             <TableCell align="left">{item.title}</TableCell>
             <TableCell align="left" sx={{ whiteSpace: 'pre' }}>{item.contents}</TableCell>
             <TableCell align="left" sx={{ whiteSpace: 'pre' }}>{item.link}</TableCell>

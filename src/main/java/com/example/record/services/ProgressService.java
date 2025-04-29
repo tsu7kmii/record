@@ -2,6 +2,7 @@ package com.example.record.services;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.record.dto.progress.ProgressRequest;
+import com.example.record.dto.progress.ProgressResponse;
 import com.example.record.exception.ErrorMessages;
 import com.example.record.models.dao.ProgressManagementRepository;
+import com.example.record.models.dao.UserAccountRepository;
 import com.example.record.models.entities.ProgressManagement;
 
 @Service
@@ -19,6 +22,9 @@ public class ProgressService {
 
     @Autowired
     ProgressManagementRepository progressRepo;
+
+    @Autowired
+    UserAccountRepository userRepo;
 
 
     public static final int STATUS_0_NOT_STARTED = 0;           // 未着手
@@ -47,7 +53,7 @@ public class ProgressService {
         ProgressManagement progress = new ProgressManagement();
         progress.setManagementId(request.getManagementId());
         progress.setParentId(request.getParentId() != null ? request.getParentId() : null);
-        progress.setUserId(request.getUserId());
+        progress.setUser(userRepo.findByUserId(request.getUserId()));
         progress.setTitle(request.getTitle());
         progress.setContents(request.getContents());
         progress.setLink(request.getLink());
@@ -84,7 +90,7 @@ public class ProgressService {
 
         ProgressManagement progress = new ProgressManagement();
         progress.setParentId(request.getParentId() != null ? request.getParentId() : null);
-        progress.setUserId(request.getUserId());
+        progress.setUser(userRepo.findByUserId(request.getUserId()));
         progress.setTitle(request.getTitle());
         progress.setContents(request.getContents());
         progress.setLink(request.getLink());
@@ -107,36 +113,92 @@ public class ProgressService {
      * 未完了の親属性レコードリストを取得 
      * @return 未完了の親属性レコードのリスト
      */
-    public List<ProgressManagement> getIncomplateProgressParent(){
+    public List<ProgressResponse> getIncomplateProgressParent(){
 
         List<ProgressManagement> progressList = progressRepo.findByParentIdIsNullAndDeleteAtIsNull();
 
-        return progressList;
+        List<ProgressResponse> progressRes = new ArrayList<>();
+
+        for (ProgressManagement progress : progressList){
+            ProgressResponse res = new ProgressResponse();
+            res.setManagementId(progress.getManagementId());
+            res.setParentId(progress.getParentId());
+            res.setUserId(progress.getUser().getUserId());
+            res.setUsername(progress.getUser().getUsername());
+            res.setTitle(progress.getTitle());
+            res.setContents(progress.getContents());
+            res.setLink(progress.getLink());
+            res.setStatus(progress.getStatus());
+            res.setCreateAt(progress.getCreateAt());
+            res.setUpdateAt(progress.getUpdateAt());
+            res.setDeleteAt(progress.getDeleteAt());
+            res.setCompletionScheduleAt(progress.getCompletionScheduleAt());
+
+            progressRes.add(res);
+        }
+
+        return progressRes;
     }
 
     /**
      * 完了済みの親属性レコードリストを取得 
      * @return 完了済みの親属性レコードのリスト
      */
-    public List<ProgressManagement> getComplateProgressParent(){
+    public List<ProgressResponse> getComplateProgressParent(){
 
         List<ProgressManagement> progressList = progressRepo.findByParentIdIsNullAndDeleteAtIsNotNull();
 
-        return progressList;
+        List<ProgressResponse> progressRes = new ArrayList<>();
+
+        for (ProgressManagement progress : progressList){
+            ProgressResponse res = new ProgressResponse();
+            res.setManagementId(progress.getManagementId());
+            res.setParentId(progress.getParentId());
+            res.setUserId(progress.getUser().getUserId());
+            res.setUsername(progress.getUser().getUsername());
+            res.setTitle(progress.getTitle());
+            res.setContents(progress.getContents());
+            res.setLink(progress.getLink());
+            res.setStatus(progress.getStatus());
+            res.setCreateAt(progress.getCreateAt());
+            res.setUpdateAt(progress.getUpdateAt());
+            res.setDeleteAt(progress.getDeleteAt());
+            res.setCompletionScheduleAt(progress.getCompletionScheduleAt());
+
+            progressRes.add(res);
+        }
+
+        return progressRes;
     }
 
     /**
      * 子属性レコードリストを取得 
      * @return 子属性レコードのリスト
      */
-    public List<ProgressManagement> getProgressChild(){
+    public List<ProgressResponse> getProgressChild(){
 
         List<ProgressManagement> progressList = progressRepo.findByParentIdIsNotNull();
 
-        return progressList;
+        List<ProgressResponse> progressRes = new ArrayList<>();
+
+        for (ProgressManagement progress : progressList){
+            ProgressResponse res = new ProgressResponse();
+            res.setManagementId(progress.getManagementId());
+            res.setParentId(progress.getParentId());
+            res.setUserId(progress.getUser().getUserId());
+            res.setUsername(progress.getUser().getUsername());
+            res.setTitle(progress.getTitle());
+            res.setContents(progress.getContents());
+            res.setLink(progress.getLink());
+            res.setStatus(progress.getStatus());
+            res.setCreateAt(progress.getCreateAt());
+            res.setUpdateAt(progress.getUpdateAt());
+            res.setDeleteAt(progress.getDeleteAt());
+            res.setCompletionScheduleAt(progress.getCompletionScheduleAt());
+
+            progressRes.add(res);
+        }
+
+        return progressRes;
     }
-
-
-
-    
 }

@@ -2,7 +2,6 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Button } from '@mui/material';
 import { getIncomplateParentList, getComplateParentList, getChildList } from '../../api/progressApi';
-import { getuserIdUsernameList } from '../../api/userApi';
 import { handleApiError } from '../../api/errorHandler';
 import ProgressTable from '../../components/progressTable';
 
@@ -15,7 +14,6 @@ const ProgressView = () => {
     const [incomplateParent, setIncomplateParent] = useState([]);
     const [complateParent, setComplateParent] = useState([]);
     const [child, setChild] = useState([]);
-    const [userIdUsername, setUserIdUsername] = useState([]);
     const [error, setError] = useState(null);
 
     /**
@@ -73,24 +71,6 @@ const ProgressView = () => {
     };
 
     /**
-     * ユーザーIDとユーザー名のリストを取得する非同期関数
-     */
-    const fetchMenuItemUserList = async () => {
-        setError(null);
-        
-        try {
-            const response = await getuserIdUsernameList({});
-            if (response.status === 200) {
-                setUserIdUsername(response.data);
-            } else {
-                setError(`ユーザーリストの取得に失敗しました: ${response.data.message}`);
-            }
-        } catch (error) {
-            setError(handleApiError(error));
-        }
-    };
-
-    /**
      * 新しい進捗を登録するためのナビゲーションを行う関数
      */
     const handleNewSubmit = async () => {
@@ -100,8 +80,6 @@ const ProgressView = () => {
     };
     
     useEffect(() => {
-        // ユーザー一覧の取得
-        fetchMenuItemUserList();
         fetchIncomplateParent();
         fetchComplateParent();
         fetchChild();
@@ -131,7 +109,7 @@ const ProgressView = () => {
             <>
                 {incomplateParent.map((parent, index) => (
                     <Fragment key={index}>
-                    <ProgressTable index={index} parentValue={parent} childValue={child} userList={userIdUsername} />
+                    <ProgressTable index={index} parentValue={parent} childValue={child} />
                     <br />
                     </Fragment>
                 ))}
@@ -146,7 +124,7 @@ const ProgressView = () => {
             </Typography>
                 {complateParent.map((parent, index) => (
                     <Fragment key={index}>
-                    <ProgressTable index={index} parentValue={parent} childValue={child} userList={userIdUsername} />
+                    <ProgressTable index={index} parentValue={parent} childValue={child} />
                     <br />
                     </Fragment>
                 ))}

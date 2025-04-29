@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.record.dto.progress.ProgressRequest;
+import com.example.record.dto.progress.ProgressResponse;
 import com.example.record.exception.ErrorMessages;
-import com.example.record.models.entities.ProgressManagement;
 import com.example.record.services.ProgressService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +33,7 @@ public class ProgressController {
      * @return 成功時は空のレスポンス
      * @throws Exception バリデーションエラーまたはその他の例外
      */
-    @PutMapping("/update")
+    @PutMapping("")
     public ResponseEntity<Void> updateProgress(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {
         
         if (bindingResult.hasErrors()) {
@@ -50,9 +50,9 @@ public class ProgressController {
      * @return 未完了の親属性レコードのリスト
      */
     @GetMapping("/parent/incomplete")
-    public ResponseEntity<List<ProgressManagement>> getIncomplateParentList() {
+    public ResponseEntity<List<ProgressResponse>> getIncomplateParentList() {
 
-        List<ProgressManagement> progressList = progressService.getIncomplateProgressParent();
+        List<ProgressResponse> progressList = progressService.getIncomplateProgressParent();
 
         return new ResponseEntity<>(progressList, HttpStatus.OK);
     }
@@ -62,9 +62,9 @@ public class ProgressController {
      * @return 完了した親属性レコードのリスト
      */
     @GetMapping("/parent/complete")
-    public ResponseEntity<List<ProgressManagement>> getComplateParentList() {
+    public ResponseEntity<List<ProgressResponse>> getComplateParentList() {
 
-        List<ProgressManagement> progressList = progressService.getComplateProgressParent();
+        List<ProgressResponse> progressList = progressService.getComplateProgressParent();
 
         return new ResponseEntity<>(progressList, HttpStatus.OK);
     }
@@ -74,9 +74,9 @@ public class ProgressController {
      * @return 未完了の子属性レコードのリスト
      */
     @GetMapping("/child")
-    public ResponseEntity<List<ProgressManagement>> getChildList() {
+    public ResponseEntity<List<ProgressResponse>> getChildList() {
 
-        List<ProgressManagement> progressList = progressService.getProgressChild();
+        List<ProgressResponse> progressList = progressService.getProgressChild();
 
         return new ResponseEntity<>(progressList, HttpStatus.OK);
     }
@@ -88,7 +88,7 @@ public class ProgressController {
      * @return 成功時は空のレスポンス
      * @throws Exception バリデーションエラーまたはその他の例外
      */
-    @PostMapping("/register")
+    @PostMapping("")
     public ResponseEntity<Void> postProgressRegister(@Validated @RequestBody ProgressRequest progressRequest, BindingResult bindingResult) throws Exception {
         
         if (bindingResult.hasErrors()) {

@@ -42,4 +42,3 @@ sampledbdata/phpmyadmin/
 ### react ###
 front/node_modules/
 /build
-front/.env

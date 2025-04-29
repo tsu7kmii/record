@@ -38,6 +38,8 @@ public final class ErrorMessages {
     public static final class ProgressError {
 
         public static final String VALIDATE_FAIL = "バリデーションエラー";
+
+        public static final String DELETED_FAIL = "期限エラー";
   
     }
 

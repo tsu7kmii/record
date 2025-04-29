@@ -46,13 +46,13 @@ public class ProgressService {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
-        if (request.getParentId() != null && !progressRepo.existsByManagementIdAndParentIdIsNullAndDeleteAtIsNull(request.getParentId())){
-            throw new Exception(ErrorMessages.ProgressError.VALIDATE_FAIL);
+        // 期限チェック
+        if (!progressRepo.existsBymanagementIdAndDeleteAtIsNull(request.getManagementId())){
+            throw new Exception(ErrorMessages.ProgressError.DELETED_FAIL);
         }
 
-        ProgressManagement progress = new ProgressManagement();
-        progress.setManagementId(request.getManagementId());
-        progress.setParentId(request.getParentId() != null ? request.getParentId() : null);
+        ProgressManagement progress = progressRepo.findByManagementId(request.getManagementId());
+
         progress.setUser(userRepo.findByUserId(request.getUserId()));
         progress.setTitle(request.getTitle());
         progress.setContents(request.getContents());
@@ -84,6 +84,7 @@ public class ProgressService {
 
         Date nowDateTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
+        // parentIdがnullではない時=子属性の時。その時に、親属性のprogressが有効なものが見つかるか検証
         if (request.getParentId() != null && !progressRepo.existsByManagementIdAndParentIdIsNullAndDeleteAtIsNull(request.getParentId())){
             throw new Exception(ErrorMessages.ProgressError.VALIDATE_FAIL);
         }

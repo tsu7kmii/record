@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+        "name": "record.cros.endpoint",
+        "type": "java.lang.String",
+        "description": "The CORS endpoint for the record application."
+        }
+    ]
+}

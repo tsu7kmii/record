@@ -18,6 +18,7 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import com.example.record.models.dao.UserAccountRepository;
+import com.example.record.properties.RecordEndpoint;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,14 +30,16 @@ public class SecurityConfig {
     @Autowired
     UserAccountRepository userAccountRepository;
 
+    @Autowired
+    RecordEndpoint endpoint;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // debug
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                            corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                            corsConfiguration.setAllowedOrigins(List.of(endpoint.getEndpoint()));
                             corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                             corsConfiguration.setAllowCredentials(true);
                             corsConfiguration.setAllowedHeaders(List.of("*"));

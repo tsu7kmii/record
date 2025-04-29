@@ -72,12 +72,12 @@ npm run build
 |`/api/**`|csrf|
 
 ### auth
-|エンドポイント|リクエスト|レスポンス|メソッド|Content-Type|詳細|  
+|エンドポイント|リクエスト|レスポンス(json)|メソッド|Content-Type|詳細|  
 |---|---|---|---|---|---|
 |/api/signin|email</br>password|200|POST|x-www-form-urlencoded|ログイン|
-|/api/user/logout|none|200|POST|json|ログアウト|
-|/api/csrf|none|200:<br/>csrfToken|GET|json|csrfトークン取得|
-|/api/user/private/auth|none|200:<br/>|GET|json|認証情報取得|
+|/api/user/logout||200|POST|json|ログアウト|
+|/api/csrf||200:String<br/>csrfToken|GET|json|csrfトークン取得|
+|/api/user/private/auth||200:<br/>|GET|json|認証情報取得|
 |/api/user/password|email|200|POST|json|パスワードリセットメール送信|
 |/api/user/password|newPassword<br/>againNewPassword<br/>token|200|PUT|json|パスワード更新|
 |/api/user/private/username|newUsername|200|PUT|json|ユーザーネーム更新|
@@ -86,17 +86,17 @@ npm run build
 |/api/user/admin/role/admin|userId|200|PUT|json|ユーザーの権限をADMINに更新|
 |/api/user/admin/role/user|userId|200|PUT|json|ユーザーの権限をUSERに更新|
 |/api/user/admin/disable|userId|200|DELETE|json|ユーザー削除|
-|/api/user/admin/users|none|200:List<br/>userId<br/>username<br/>email<br/>permissionLevel|GET|json|ユーザー一覧取得|
-|/api/user/private/users/active|none|200:List<br>userId<br/>username|GET|json|有効なユーザー一覧取得|
-|/api/user/private/users/all|none|200:List<br>userId<br/>username|GET|json|全ユーザー一覧取得|
+|/api/user/admin/users||200:List<br/>userId<br/>username<br/>email<br/>permissionLevel|GET|json|ユーザー一覧取得|
+|/api/user/private/users/active||200:List<br>userId<br/>username|GET|json|有効なユーザー一覧取得|
+|/api/user/private/users/all||200:List<br>userId<br/>username|GET|json|全ユーザー一覧取得|
 
 ### progress
 |エンドポイント|リクエスト|レスポンス|メソッド|Content-Type|詳細|  
 |---|---|---|---|---|---|
 |/api/progress|managementId<br/>(parentId)<br/>userId<br/>title<br/>contents<br/>(link)<br/>status<br/>completionScheduleAt|200|PUT|json|進捗を更新|
-|/api/progress/parent/incomplete|none|200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|未完了の親属性レコードリスト取得|
-|/api/progress/parent/complete|none|200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|完了した親属性レコードリスト取得|
-|/api/progress/child|none|200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|未完了の子属性レコードリスト取得|
+|/api/progress/parent/incomplete||200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|未完了の親属性レコードリスト取得|
+|/api/progress/parent/complete||200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|完了した親属性レコードリスト取得|
+|/api/progress/child||200:List<br/>managementId<br/>parentId<br/>userId<br/>title<br/>contents<br/>link<br/>status<br/>completionScheduleAt<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|未完了の子属性レコードリスト取得|
 |/api/progress|(parentId)<br/>userId<br/>title<br/>contents<br/>(link)<br/>status<br/>completionScheduleAt|200|POST|json|新規登録|
 
 ### vote
@@ -108,7 +108,7 @@ npm run build
 |/api/vote/question/answer|voteQuestionId|200:List<br/>voteAnswerId<br/>voteQuestionId<br/>userId<br/>username<br/>answer<br/>createAt<br/>updateAt<br/>deleteAt|POST|json|質問別回答一覧取得|
 |/api/vote/answer|List<br/>(voteAnswerId)<br/>voteQuestionId<br/>userId<br/>answer|200|PUT|json|質問更新時の回答変更|
 |/api/vote/answer|List<br/>voteAnswerId<br/>voteQuestionId<br/>userId<br/>answer|200|POST|json|質問追加時の回答追加|
-|/api/vote/question|none|200:List<br/>voteQuestionId<br/>chatRoomId<br/>userId<br/>username<br/>title<br/>period<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|質問一覧取得|
+|/api/vote/question||200:List<br/>voteQuestionId<br/>chatRoomId<br/>userId<br/>username<br/>title<br/>period<br/>createAt<br/>updateAt<br/>deleteAt|GET|json|質問一覧取得|
 |/api/vote/question|voteQuestionId<br/>(userId)<br/>(title)<br/>(period)|200|DELETE|json|質問削除|
 |/api/vote/question|voteQuestionId<br/>userId<br/>title<br/>period|200:<br/>voteQuestionId|PUT|json|質問更新|
 |/api/vote/question|userId<br/>title<br/>period|200:<br/>voteQuestionId|POST|json|質問新規追加|

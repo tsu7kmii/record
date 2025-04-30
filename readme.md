@@ -55,10 +55,13 @@ npm run build
 ## record
 `front : react`, `server : spring`構成のWebアプリケーションシステム
 
-現在の機能
-・認証機能
-・進捗管理機能
-・投票機能
+現在の機能  
+・認証機能  
+・進捗管理機能  
+・投票機能  
+
+
+サービス公開中 → [こちら](https://record-nsnft.ma2kz.net/)  
 
 
 ## api資料

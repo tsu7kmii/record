@@ -63,6 +63,23 @@ npm run build
 
 サービス公開中 → [こちら](https://record-nsnft.ma2kz.net/)  
 
+## release
+公開秘話 -> [here](./releaseLog.md)
+
+クラウドサービス : aws => azure
+
+## dev
+ - Java: 17
+ - Spring Boot: 3.4.5
+ - Spring Security 6.4.5
+ - React 19
+
+ - docker
+    - mysql
+    - phpmyadmin
+    - mailhog
+
+
 
 ## api資料
 

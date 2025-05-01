@@ -104,6 +104,11 @@ const ProgressView = () => {
                     新しく登録
                 </Button>
             </Box>
+            {incomplateParent.length < 1  && complateParent.length < 1 && (
+                <Typography variant="h4" component="h2" gutterBottom>
+                    進捗が存在しません
+                </Typography>
+            )}
             <br />
             {incomplateParent.length > 0 && (
             <>
@@ -117,7 +122,7 @@ const ProgressView = () => {
             </>
             )}
 
-            {incomplateParent.length > 0 && (
+            {complateParent.length > 0 && (
             <>
             <Typography variant="h4" component="h2" gutterBottom>
                 完了済の進捗一覧

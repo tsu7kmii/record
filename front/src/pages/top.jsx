@@ -40,6 +40,27 @@ const Top = () => {
                     ログインページ
                 </Link>
 
+                <br />
+                <br />
+
+                <Link to="/user/register"> 
+                    アカウント作成
+                </Link>
+
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+
+                <Typography variant="body1" gutterBottom>
+                    dev by github
+                </Typography>
+
+                <Link to="https://github.com/tsu7kmii/record"> 
+                    github repository
+                </Link>
+
             </Box>
         </Container>
         </>

@@ -52,9 +52,7 @@ npm run build
 `/build`に作成される
  -->
 
-2025/7/20追記：  
-コスト削減のため、現在フロントのみ公開中です。よりシステムは動作していません…。  
-もし問題があればご連絡いただければ幸いです。
+
 
 ## record
 `front : react`, `server : spring`構成のWebアプリケーションシステム
@@ -65,7 +63,7 @@ npm run build
 ・投票機能  
 
 
-サービス公開中 → [こちら](https://record-nsnft.ma2kz.net/)  
+サービス公開中 → コストカットによる非公開にしました
 
 ## release
 公開秘話 -> [here](./releaseLog.md)

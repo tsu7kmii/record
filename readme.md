@@ -52,7 +52,7 @@ npm run build
 `/build`に作成される
  -->
 
-
+開発にAIは使っいましたが、DB設計とかAPI設計とか認証機能(まあフレームワーク依存…)は全部自分でやりました！！！！！！！！！！！
 
 ## record
 `front : react`, `server : spring`構成のWebアプリケーションシステム
